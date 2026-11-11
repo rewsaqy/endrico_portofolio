@@ -79,7 +79,7 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
     return () => clearInterval(interval);
   }, []);
 
-  // Fast-Forward on any tap/click or keypress (Gamer QoL: skip loading anytime)
+  // Fast-Forward on tap/click or keypress (synced cleanly with browser click/keydown audio activation)
   useEffect(() => {
     const handleQuickSkip = () => {
       if (!hasFinishedRef.current) {
@@ -88,11 +88,11 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
       }
     };
 
-    window.addEventListener('pointerdown', handleQuickSkip, { once: true });
+    window.addEventListener('click', handleQuickSkip, { once: true });
     window.addEventListener('keydown', handleQuickSkip, { once: true });
 
     return () => {
-      window.removeEventListener('pointerdown', handleQuickSkip);
+      window.removeEventListener('click', handleQuickSkip);
       window.removeEventListener('keydown', handleQuickSkip);
     };
   }, []);

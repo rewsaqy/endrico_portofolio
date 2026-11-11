@@ -65,6 +65,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
         {/* Prev Track */}
         <button
           type="button"
+          data-music-control="true"
           onClick={handlePrev}
           aria-label="Lagu sebelumnya"
           className="text-zinc-400 hover:text-white p-1 hover:bg-zinc-800 transition-colors cursor-pointer border border-transparent hover:border-zinc-700 focus-visible:outline-2 focus-visible:outline-white"
@@ -76,6 +77,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
         {/* Play / Pause Manga Action Button */}
         <button
           type="button"
+          data-music-control="true"
           onClick={handlePlayToggle}
           aria-label={isPlaying ? 'Jeda musik' : 'Putar musik'}
           className={`px-2.5 py-1 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all duration-150 transform active:scale-95 border-2 focus-visible:outline-2 focus-visible:outline-white ${
@@ -103,6 +105,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
         {/* Next Track */}
         <button
           type="button"
+          data-music-control="true"
           onClick={handleNext}
           aria-label="Lagu berikutnya"
           className="text-zinc-400 hover:text-white p-1 hover:bg-zinc-800 transition-colors cursor-pointer border border-transparent hover:border-zinc-700 focus-visible:outline-2 focus-visible:outline-white"

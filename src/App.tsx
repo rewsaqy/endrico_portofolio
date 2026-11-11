@@ -32,7 +32,7 @@ const AppContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showQuoteScreen, setShowQuoteScreen] = useState<boolean>(false);
 
-  const { togglePlay, nextTrack, prevTrack, play, isPlaying } = useMusicPlayer();
+  const { togglePlay, nextTrack, prevTrack, play, isPlaying, autoplayBlocked } = useMusicPlayer();
 
   const handleLoadingComplete = () => {
     // Attempt Track 01 (DATEN) playback smoothly without reloading if already running/unlocked
@@ -270,6 +270,26 @@ const AppContent: React.FC = () => {
         </div>
       </footer>
 
+      {/* CLEAR BROWSER AUDIO UNLOCK PROMPT WHEN PASSIVE VISIT WAS BLOCKED BY BROWSER POLICY */}
+      {!isLoading && !showQuoteScreen && autoplayBlocked && !isPlaying && (
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-30 px-3">
+          <button
+            type="button"
+            data-music-control="true"
+            onClick={() => {
+              sfx.playSelect();
+              void play(true);
+            }}
+            className="min-h-[44px] bg-white text-black px-5 py-2 border-2 border-black shadow-[4px_4px_0px_#ffffff] font-mono text-xs font-black tracking-wider uppercase -skew-x-6 hover:bg-zinc-200 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4 whitespace-nowrap"
+          >
+            <span className="skew-x-6 flex items-center gap-2">
+              <Volume2 size={14} aria-hidden="true" />
+              <span>KLIK DI MANA SAJA UNTUK PUTAR BGM: 堕天</span>
+            </span>
+          </button>
+        </div>
+      )}
+
       {/* MANGA CINEMATIC LOADING SCREEN / AUTOPLAY UNLOCK */}
       {isLoading && <MangaLoadingScreen onComplete={handleLoadingComplete} />}
 
@@ -290,6 +310,7 @@ const AppContent: React.FC = () => {
               title2="3D ARTIST & GAME DESIGNER"
               quote="Malam bukan tentang kegelapan, melainkan ruang bebas tanpa batas bagi mereka yang berani merancang dunia mereka sendiri."
               author="ENDRICO ROVSANS KURNIA // rewsaqy"
+              audioStatusText={isPlaying ? "BGM ACTIVE // 堕天" : "KLIK UNTUK NYALAKAN BGM // 堕天"}
               autoProceedSeconds={2.4}
               onProceed={handleQuoteProceed}
             />

@@ -114,6 +114,8 @@ export const MusicPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           source.connect(analyserNode);
           analyserNode.connect(gain);
           gain.connect(ctx.destination);
+          // Avoid double attenuation (element volume * gainNode volume) once WebAudio graph owns output
+          audioRef.current.volume = 1;
         }
       } catch (err) {
         console.warn('Audio source node connection error:', err);
@@ -136,7 +138,12 @@ export const MusicPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         ensureAudioNodes();
       }
 
-      audio.volume = isMuted ? 0 : volume;
+      if (gainNodeRef.current) {
+        gainNodeRef.current.gain.value = isMuted ? 0 : volume;
+        audio.volume = 1;
+      } else {
+        audio.volume = isMuted ? 0 : volume;
+      }
       userPausedRef.current = false;
 
       try {
@@ -313,28 +320,34 @@ export const MusicPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (audioCtxRef.current) {
         audioCtxRef.current.close().catch(() => {});
       }
+      audioCtxRef.current = null;
+      gainNodeRef.current = null;
+      sourceNodeRef.current = null;
+      audioRef.current = null;
+      setAnalyser(null);
     };
   }, []);
 
-  // Global first-gesture audio unlocker (persists across click/pointerdown/touchend/keydown until audio plays cleanly)
+  // Global first-gesture audio unlocker (uses click/touchend/keydown in bubble phase and skips player controls to prevent toggle self-cancel)
   useEffect(() => {
     if (isPlaying || userPausedRef.current) return;
 
-    const unlockOnGesture = () => {
+    const unlockOnGesture = (e: Event) => {
       if (userPausedRef.current) return;
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.('[data-music-control="true"]')) return;
+      if (audioRef.current && !audioRef.current.paused) return;
       void play(true);
     };
 
-    window.addEventListener('click', unlockOnGesture, { capture: true });
-    window.addEventListener('pointerdown', unlockOnGesture, { capture: true });
-    window.addEventListener('touchend', unlockOnGesture, { capture: true });
-    window.addEventListener('keydown', unlockOnGesture, { capture: true });
+    window.addEventListener('click', unlockOnGesture);
+    window.addEventListener('touchend', unlockOnGesture);
+    window.addEventListener('keydown', unlockOnGesture);
 
     return () => {
-      window.removeEventListener('click', unlockOnGesture, { capture: true });
-      window.removeEventListener('pointerdown', unlockOnGesture, { capture: true });
-      window.removeEventListener('touchend', unlockOnGesture, { capture: true });
-      window.removeEventListener('keydown', unlockOnGesture, { capture: true });
+      window.removeEventListener('click', unlockOnGesture);
+      window.removeEventListener('touchend', unlockOnGesture);
+      window.removeEventListener('keydown', unlockOnGesture);
     };
   }, [isPlaying, play]);
 

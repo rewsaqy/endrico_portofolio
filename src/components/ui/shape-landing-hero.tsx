@@ -127,6 +127,7 @@ export interface HeroGeometricProps {
   title2?: string;
   quote?: string;
   author?: string;
+  audioStatusText?: string;
   rotate?: number;
   width?: number;
   height?: number;
@@ -141,6 +142,7 @@ function HeroGeometric({
   title2 = "3D ARTIST & GAME DESIGNER",
   quote = "Malam bukan tentang kegelapan, melainkan ruang bebas tanpa batas bagi mereka yang berani merancang dunia mereka sendiri.",
   author = "ENDRICO ROVSANS KURNIA // rewsaqy",
+  audioStatusText = "BGM ACTIVE // 堕天",
   rotate = 12,
   width = 560,
   height = 76,
@@ -449,7 +451,7 @@ function HeroGeometric({
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-800 pt-2.5 text-[11px] sm:text-xs font-mono">
                 <span className="text-white font-bold tracking-wide">{author}</span>
-                <span className="text-zinc-300">BGM ACTIVE // 堕天</span>
+                <span className="text-zinc-300">{audioStatusText}</span>
               </div>
 
               {/* Synced Auto-Proceed Progress Bar */}
