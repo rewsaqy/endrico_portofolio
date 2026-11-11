@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --yofu-black: #050508;
+  --yofu-dark: #0f0f14;
+  --yofu-gray: #1f1f28;
+  --yofu-light: #e6e6ef;
+  --yofu-white: #ffffff;
+}
+
+body {
+  font-family: 'Space Grotesk', 'Impact', sans-serif;
+  background-color: var(--yofu-black);
+  color: #ffffff;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide default scrollbars everywhere */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Manga Screentone Halftone Pattern */
+.manga-screentone {
+  background-image: radial-gradient(#ffffff 18%, transparent 19%), radial-gradient(#33333e 18%, transparent 19%);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+  opacity: 0.12;
+}
+
+/* Yofukashi Diagonal Night Slashes / Manga Action Lines */
+.yofu-slash-bg {
+  background: repeating-linear-gradient(
+    -35deg,
+    #050508,
+    #050508 80px,
+    #0d0d12 80px,
+    #0d0d12 160px
+  );
+}
+
+/* Manga Speedlines */
+.manga-speedlines {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 4px,
+    rgba(255, 255, 255, 0.03) 4px,
+    rgba(255, 255, 255, 0.03) 8px
+  );
+}
+
+/* Stark Black & White Ransom Cutout Letter */
+.ransom-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Anton', 'Bebas Neue', 'Impact', sans-serif;
+  text-transform: uppercase;
+  font-weight: 900;
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 4px 4px 0px #000000, 5px 5px 0px rgba(255, 255, 255, 0.2);
+}
+
+.ransom-letter:hover {
+  transform: scale(1.15) rotate(2deg) !important;
+}
+
+/* Monochrome Badges */
+.yofu-badge-skew {
+  transform: skew(-14deg);
+}
+.yofu-badge-unskew {
+  transform: skew(14deg);
+}
+
+@keyframes idleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-idleFloat {
+  animation: idleFloat 4s ease-in-out infinite;
+}
+
+/* Silky Smooth Manga Screen Slash Transitions */
+@keyframes smoothBlade1 {
+  0% { transform: translateX(-110%) skewX(-14deg); opacity: 0.9; }
+  45% { transform: translateX(0%) skewX(-14deg); opacity: 1; }
+  100% { transform: translateX(110%) skewX(-14deg); opacity: 0.9; }
+}
+
+@keyframes smoothBlade2 {
+  0% { transform: translateX(-120%) skewX(-14deg); }
+  40% { transform: translateX(0%) skewX(-14deg); }
+  58% { transform: translateX(0%) skewX(-14deg); }
+  100% { transform: translateX(120%) skewX(-14deg); }
+}
+
+@keyframes smoothText {
+  0% { opacity: 0; transform: scale(0.92) translateY(10px); }
+  35% { opacity: 1; transform: scale(1) translateY(0); }
+  60% { opacity: 1; transform: scale(1.02) translateY(0); }
+  100% { opacity: 0; transform: scale(1.08) translateY(-10px); }
+}
+
+@keyframes fadeOverlay {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-smoothBlade1 {
+  animation: smoothBlade1 0.65s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.animate-smoothBlade2 {
+  animation: smoothBlade2 0.68s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.animate-smoothText {
+  animation: smoothText 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-fadeOverlay {
+  animation: fadeOverlay 0.65s ease-in-out forwards;
+}
+
+/* FNAF / Retro Survival Horror CRT & Surveillance Scanline Animations (QOL Only) */
+@keyframes fnafScanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes fnafGlitch {
+  0%, 100% { opacity: 0.95; transform: translate(0, 0); }
+  20% { opacity: 0.8; transform: translate(-1px, 1px); }
+  40% { opacity: 1; transform: translate(1px, -1px); }
+  60% { opacity: 0.85; transform: translate(-1px, 0); }
+  80% { opacity: 0.95; transform: translate(1px, 1px); }
+}
+
+@keyframes recBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.animate-fnafScanline {
+  animation: fnafScanline 4s linear infinite;
+}
+
+.animate-fnafGlitch {
+  animation: fnafGlitch 0.25s infinite;
+}
+
+.animate-recBlink {
+  animation: recBlink 1.2s infinite;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 40s linear infinite;
+}
+
+/* Anko Manga Character Styling: 100% Monochrome Manga Noir with Stark Rim Light */
+.anko-manga-art {
+  filter: grayscale(100%) contrast(140%) brightness(105%) drop-shadow(-8px -8px 0px #ffffff) drop-shadow(-20px -20px 0px #15151e) drop-shadow(-30px -30px 0px #000000);
+}
