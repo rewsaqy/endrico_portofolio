@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { MangaCharacter } from '../components/MangaCharacter';
 import { YofukashiButton } from '../components/YofukashiButton';
 import { YofukashiTitle } from '../components/YofukashiTitle';
@@ -50,6 +51,7 @@ const MENU_ITEMS: MenuItemData[] = [
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const [selectedIndex, setSelectedIndex] = useState<number>(2); // Default PROJECTS
+  const prefersReduced = useReducedMotion() ?? false;
 
   // Keyboard navigation
   useEffect(() => {
@@ -71,42 +73,61 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   }, [selectedIndex, onNavigate]);
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row items-center justify-between px-6 md:px-12 lg:px-20 animate-slideInLeft py-4 md:py-0">
+    <div className="flex-1 flex flex-col md:flex-row items-center justify-between px-6 md:px-12 lg:px-20 py-4 md:py-0">
       {/* LEFT COLUMN: TITLE & YOFUKASHI NO UTA NOCTURNAL MENU */}
       <div className="w-full md:w-7/12 flex flex-col justify-center space-y-3 max-w-2xl py-1 z-20">
         {/* YOFUKASHI NO UTA MANGA TITLE: ENDRICO */}
-        <YofukashiTitle
-          name="ENDRICO"
-          fullName="ENDRICO ROVSANS KURNIA"
-          tagline="3D ARTIST & GAME DESIGNER // rewsaqy"
-        />
+        <motion.div
+          initial={prefersReduced ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: prefersReduced ? 0.01 : 0.42, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <YofukashiTitle
+            name="ENDRICO"
+            fullName="ENDRICO ROVSANS KURNIA"
+            tagline="3D ARTIST & GAME DESIGNER // rewsaqy"
+          />
+        </motion.div>
 
         {/* Manga Noir Mission / Bio Box */}
-        <div
-          className="relative bg-black text-white p-3 border-2 border-white shadow-[4px_4px_0px_#ffffff] max-w-xl transform -rotate-1"
+        <motion.div
+          initial={prefersReduced ? { opacity: 1, x: 0, rotate: -1 } : { opacity: 0, x: -20, rotate: -2 }}
+          animate={{ opacity: 1, x: 0, rotate: -1 }}
+          transition={{ duration: prefersReduced ? 0.01 : 0.4, delay: prefersReduced ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
+          className="relative bg-black text-white p-3 border-2 border-white shadow-[4px_4px_0px_#ffffff] max-w-xl"
           style={{ clipPath: 'polygon(0 0, 100% 0, 97% 100%, 3% 100%)' }}
         >
           <p className="font-mono text-xs leading-relaxed text-zinc-300">
             3D Artist &amp; Game Designer: fokus pada 3D modeling stylized &amp; PSX, map dan level design atmosferik, serta core gameplay mechanics.
           </p>
-        </div>
+        </motion.div>
 
         {/* YOFUKASHI NO UTA NOCTURNAL BUTTONS */}
         <nav className="flex flex-col space-y-2 pt-1 w-full max-w-xl">
           {MENU_ITEMS.map((item, index) => (
-            <YofukashiButton
+            <motion.div
               key={item.key}
-              num={item.num}
-              title={item.title}
-              kanji={item.kanji}
-              tag={item.tag}
-              isActive={selectedIndex === index}
-              onClick={() => {
-                setSelectedIndex(index);
-                onNavigate(item.key);
+              initial={prefersReduced ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: prefersReduced ? 0.01 : 0.36,
+                delay: prefersReduced ? 0 : 0.14 + index * 0.055,
+                ease: [0.16, 1, 0.3, 1],
               }}
-              onHover={() => setSelectedIndex(index)}
-            />
+            >
+              <YofukashiButton
+                num={item.num}
+                title={item.title}
+                kanji={item.kanji}
+                tag={item.tag}
+                isActive={selectedIndex === index}
+                onClick={() => {
+                  setSelectedIndex(index);
+                  onNavigate(item.key);
+                }}
+                onHover={() => setSelectedIndex(index)}
+              />
+            </motion.div>
           ))}
         </nav>
       </div>

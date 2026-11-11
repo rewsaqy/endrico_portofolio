@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Disc3, Terminal, Zap, Radio } from 'lucide-react';
+import { useMusicPlayer } from '../context/MusicPlayerContext';
 import { sfx } from '../utils/sfx';
 
 interface MangaLoadingScreenProps {
@@ -20,6 +22,8 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
   const [logIndex, setLogIndex] = useState<number>(0);
   const [isSlashing, setIsSlashing] = useState<boolean>(false);
   const hasFinishedRef = useRef<boolean>(false);
+  const prefersReduced = useReducedMotion() ?? false;
+  const { isPlaying, autoplayBlocked } = useMusicPlayer();
 
   // Trigger completion sequence (Katana slash + audio start)
   const triggerGameStart = () => {
@@ -155,7 +159,12 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
         {/* MAIN GAME STAGE (Tactical Character Cell & Terminal Stream) */}
         <main className="relative z-10 flex-1 flex flex-col md:flex-row items-center justify-center my-3 sm:my-6 gap-6 sm:gap-10 max-w-5xl mx-auto w-full">
           {/* Tactical Character Target Cell */}
-          <div className="relative w-40 sm:w-56 md:w-64 h-52 sm:h-72 md:h-80 flex items-end justify-center shrink-0">
+          <motion.div
+            initial={prefersReduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.92, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: prefersReduced ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-40 sm:w-56 md:w-64 h-52 sm:h-72 md:h-80 flex items-end justify-center shrink-0"
+          >
             {/* Comic Frame Crosshair Accents */}
             <div aria-hidden="true" className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-white" />
             <div aria-hidden="true" className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-white" />
@@ -181,10 +190,15 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
             <div aria-hidden="true" className="absolute -top-3 -right-3 font-sans font-black text-2xl text-white tracking-widest opacity-80 drop-shadow-[3px_3px_0px_#000000]">
               ドォン!
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Game Title & Realtime Memory Stream */}
-          <div className="flex flex-col space-y-3.5 max-w-lg w-full text-center md:text-left">
+          <motion.div
+            initial={prefersReduced ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: prefersReduced ? 0.01 : 0.45, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col space-y-3.5 max-w-lg w-full text-center md:text-left"
+          >
             <div className="flex items-center justify-center md:justify-start gap-2 text-zinc-400 font-mono text-xs font-bold">
               <span className="bg-white text-black px-1.5 py-0.2 font-black text-[10px]">
                 STAGE 00
@@ -199,12 +213,16 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
                 ENDRICO
               </h1>
               <p className="font-mono text-xs sm:text-sm font-bold text-zinc-400 tracking-wider mt-1">
-                3D ARTIST & GAME DESIGNER // <span className="text-white">rewsaqy</span>
+                3D ARTIST &amp; GAME DESIGNER // <span className="text-white">rewsaqy</span>
               </p>
             </div>
 
             {/* Retro Game Memory Feed Terminal */}
-            <div className="bg-black/95 border-2 border-zinc-800 p-3 sm:p-4 shadow-[4px_4px_0px_#27272a] font-mono text-xs space-y-2 text-left">
+            <div className="relative overflow-hidden bg-black/95 border-2 border-zinc-800 p-3 sm:p-4 shadow-[4px_4px_0px_#27272a] font-mono text-xs space-y-2 text-left">
+              <div
+                aria-hidden="true"
+                className="absolute inset-y-0 w-16 bg-white/10 animate-mangaSweep pointer-events-none"
+              />
               <div className="flex items-center justify-between text-[10px] text-zinc-400 border-b border-zinc-900 pb-1">
                 <span className="flex items-center gap-1.5 text-white">
                   <Terminal size={11} aria-hidden="true" className="text-red-500" />
@@ -252,14 +270,14 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
               </div>
 
               <span className="text-[10px] text-zinc-300 bg-zinc-950 px-2 py-0.5 border border-zinc-800">
-                AUTO-PLAY ENABLED
+                {isPlaying ? 'BGM AKTIF // 堕天' : autoplayBlocked ? 'TAP UNTUK AUDIO' : 'AUTO-PLAY READY'}
               </span>
             </div>
 
             <p className="font-mono text-[9px] sm:text-[10px] text-zinc-400 tracking-wider">
-              ✦ OTOMATIS MEMULAI LAGU &quot;堕天 (DATEN)&quot; SAAT SELESAI // TAP ATAU KLIK UNTUK FAST-FORWARD
+              ✦ TAP / KLIK / TEKAN TOMBOL APA SAJA UNTUK FAST-FORWARD &amp; NYALAKAN AUDIO &quot;堕天 (DATEN)&quot;
             </p>
-          </div>
+          </motion.div>
         </main>
 
         {/* BOTTOM HUD FOOTER */}

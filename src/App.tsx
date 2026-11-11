@@ -32,18 +32,20 @@ const AppContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showQuoteScreen, setShowQuoteScreen] = useState<boolean>(false);
 
-  const { togglePlay, nextTrack, prevTrack, play, selectTrack } = useMusicPlayer();
+  const { togglePlay, nextTrack, prevTrack, play, isPlaying } = useMusicPlayer();
 
   const handleLoadingComplete = () => {
-    // Enforce Track 01: DATEN as the initial first track
-    selectTrack(0);
-    play();
+    // Attempt Track 01 (DATEN) playback smoothly without reloading if already running/unlocked
+    if (!isPlaying) {
+      void play(false);
+    }
     setIsLoading(false);
     setShowQuoteScreen(true);
   };
 
   const handleQuoteProceed = () => {
     sfx.playSlash();
+    void play(true);
     setShowQuoteScreen(false);
   };
 
@@ -55,20 +57,6 @@ const AppContent: React.FC = () => {
     }, 2400);
     return () => clearTimeout(timer);
   }, [showQuoteScreen]);
-
-  // Browser Autoplay Unlock on earliest user touch/click/key
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      selectTrack(0);
-      play();
-    };
-    window.addEventListener('pointerdown', handleFirstInteraction, { once: true });
-    window.addEventListener('keydown', handleFirstInteraction, { once: true });
-    return () => {
-      window.removeEventListener('pointerdown', handleFirstInteraction);
-      window.removeEventListener('keydown', handleFirstInteraction);
-    };
-  }, []);
 
   // Sync hash changes
   useEffect(() => {
@@ -207,7 +195,7 @@ const AppContent: React.FC = () => {
       </div>
 
       {/* ACTIVE PAGE CONTENT */}
-      <main className="relative z-10 flex-1 min-h-0 flex flex-col justify-start md:justify-center overflow-y-auto md:overflow-hidden">
+      <main className="relative z-10 flex-1 min-h-0 flex flex-col justify-start md:justify-center pt-2 md:pt-3 overflow-y-auto md:overflow-hidden">
         {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
         {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
         {currentPage === 'skills' && <SkillsPage onNavigate={handleNavigate} />}

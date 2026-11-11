@@ -59,6 +59,11 @@ export const BottomEqualizerBar: React.FC = () => {
           const rawVal = frequencyData[freqIndex] || 0;
           // Scale by volume factor
           normalizedHeight = (rawVal / 255) * effectiveVol;
+        } else if (isPlaying) {
+          // Energetic synthetic beat wave when autoplay succeeded prior to WebAudio gesture attach
+          const beatA = Math.abs(Math.sin(idleTime * 2.8 + i * 0.35));
+          const beatB = Math.abs(Math.cos(idleTime * 1.9 - i * 0.2));
+          normalizedHeight = Math.max(0.18, (beatA * 0.45 + beatB * 0.35) * (isMuted ? 0.15 : Math.max(0.4, effectiveVol)));
         } else {
           // Idle breathing wave when paused
           const wave1 = Math.sin(idleTime * 1.5 + i * 0.25);

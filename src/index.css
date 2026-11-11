@@ -100,6 +100,15 @@ body {
   animation: idleFloat 4s ease-in-out infinite;
 }
 
+@keyframes mangaSweep {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(240%) skewX(-18deg); }
+}
+
+.animate-mangaSweep {
+  animation: mangaSweep 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
 /* Silky Smooth Manga Screen Slash Transitions */
 @keyframes smoothBlade1 {
   0% { transform: translateX(-110%) skewX(-14deg); opacity: 0.9; }
@@ -236,6 +245,7 @@ body {
   .animate-smoothBlade2,
   .animate-smoothText,
   .animate-fadeOverlay,
+  .animate-mangaSweep,
   .animate-bounce,
   .animate-pulse,
   .animate-ping,

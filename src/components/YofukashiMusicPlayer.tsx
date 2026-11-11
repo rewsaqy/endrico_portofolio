@@ -7,6 +7,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
   const [showPlaylist, setShowPlaylist] = useState<boolean>(false);
   const {
     isPlaying,
+    autoplayBlocked,
     togglePlay,
     volume,
     setVolume,
@@ -60,7 +61,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
   return (
     <div className="flex items-center gap-2 sm:gap-3 font-mono select-none">
       {/* Track Skip & Play Controls Group */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 shrink-0">
         {/* Prev Track */}
         <button
           type="button"
@@ -112,12 +113,12 @@ export const YofukashiMusicPlayer: React.FC = () => {
       </div>
 
       {/* Track Info & Vinyl Icon */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
         <button
           type="button"
           onClick={handleNext}
           aria-label={`Ganti ke lagu berikutnya, sedang diputar ${currentTrack.title}`}
-          className="flex items-center gap-2 max-w-[130px] sm:max-w-[200px] lg:max-w-[240px] cursor-pointer group bg-transparent border-0 p-0 text-left focus-visible:outline-2 focus-visible:outline-white"
+          className="flex items-center gap-2 max-w-[115px] sm:max-w-[165px] xl:max-w-[210px] min-w-0 cursor-pointer group bg-transparent border-0 p-0 text-left focus-visible:outline-2 focus-visible:outline-white"
           title="Click to Switch Track (Next)"
         >
           <Disc3
@@ -137,11 +138,13 @@ export const YofukashiMusicPlayer: React.FC = () => {
                 {currentTrack.title}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-[10px] text-zinc-400">
-              <span className="truncate hidden sm:inline">{currentTrack.subTitle}</span>
-              <span aria-hidden="true" className="text-zinc-400 hidden sm:inline">//</span>
-              <span className="font-mono text-zinc-300">
-                {formatTime(currentTime)} / {formatTime(duration)}
+            <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 whitespace-nowrap">
+              <span className="truncate hidden 2xl:inline max-w-[100px]">
+                {autoplayBlocked && !isPlaying ? 'KLIK UNTUK AUDIO' : currentTrack.subTitle}
+              </span>
+              <span aria-hidden="true" className="text-zinc-400 hidden 2xl:inline">//</span>
+              <span className="font-mono text-zinc-300 shrink-0">
+                {autoplayBlocked && !isPlaying ? 'TAP/KEY -> AUDIO' : `${formatTime(currentTime)} / ${formatTime(duration)}`}
               </span>
             </div>
           </div>
@@ -156,7 +159,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
           }}
           aria-expanded={showPlaylist}
           aria-label="Buka atau tutup daftar putar lagu"
-          className={`px-1.5 py-0.5 text-[10px] flex items-center gap-1 font-mono font-bold transition-all cursor-pointer border focus-visible:outline-2 focus-visible:outline-white ${
+          className={`shrink-0 px-1.5 py-0.5 text-[10px] flex items-center gap-1 font-mono font-bold transition-all cursor-pointer border focus-visible:outline-2 focus-visible:outline-white ${
             showPlaylist
               ? 'bg-white text-black border-white shadow-[2px_2px_0px_#ffffff]'
               : 'text-zinc-300 hover:text-white border-zinc-800 hover:border-zinc-500 bg-zinc-950'
@@ -169,7 +172,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
       </div>
 
       {/* Scrub / Progress Bar */}
-      <div className="hidden lg:flex items-center gap-2 w-28 xl:w-36">
+      <div className="hidden 2xl:flex items-center gap-2 w-24 shrink-0">
         <div className="relative w-full h-1.5 bg-zinc-800 border border-zinc-700 overflow-hidden cursor-pointer group">
           <div
             className="h-full bg-white transition-all duration-100"
@@ -274,7 +277,7 @@ export const YofukashiMusicPlayer: React.FC = () => {
                   key={track.id}
                   onClick={() => {
                     sfx.playSelect();
-                    selectTrack(idx);
+                    selectTrack(idx, true);
                     setShowPlaylist(false);
                   }}
                   className={`w-full text-left p-1.5 flex items-center justify-between border transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-white ${
