@@ -29,12 +29,28 @@ const AppContent: React.FC = () => {
   const [timeString, setTimeString] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { togglePlay, nextTrack, prevTrack, play } = useMusicPlayer();
+  const { togglePlay, nextTrack, prevTrack, play, selectTrack } = useMusicPlayer();
 
   const handleLoadingComplete = () => {
+    // Enforce Track 01: DATEN as the initial first track
+    selectTrack(0);
     play();
     setIsLoading(false);
   };
+
+  // Browser Autoplay Unlock on earliest user touch/click/key
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      selectTrack(0);
+      play();
+    };
+    window.addEventListener('pointerdown', handleFirstInteraction, { once: true });
+    window.addEventListener('keydown', handleFirstInteraction, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
 
   // Sync hash changes
   useEffect(() => {
