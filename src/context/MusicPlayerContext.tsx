@@ -7,29 +7,36 @@ export interface Track {
   subTitle: string;
 }
 
+const getAssetUrl = (path: string) => {
+  const base = import.meta.env.BASE_URL || '/';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${cleanBase}${cleanPath}`;
+};
+
 export const PLAYLIST: Track[] = [
   {
     id: 'daten',
     title: 'NOCTURNAL BGM 01 // 堕天',
-    src: '/audio/track_daten.mp3',
+    src: getAssetUrl('/audio/track_daten.mp3'),
     subTitle: 'CALL OF THE NIGHT OST',
   },
   {
     id: 'yofukashi',
     title: 'NOCTURNAL BGM 02 // よふかしのうた',
-    src: '/audio/track_yofukashi.mp3',
+    src: getAssetUrl('/audio/track_yofukashi.mp3'),
     subTitle: 'NIGHTFALL BEATS',
   },
   {
     id: 'theme',
     title: 'NOCTURNAL BGM 03 // NIGHT DRIVE',
-    src: '/audio/track_theme.mp3',
+    src: getAssetUrl('/audio/track_theme.mp3'),
     subTitle: 'CHILL NOIR THEME',
   },
   {
     id: 'losstime',
     title: 'NOCTURNAL BGM 04 // ロスタイム',
-    src: '/audio/track_losstime.mp3',
+    src: getAssetUrl('/audio/track_losstime.mp3'),
     subTitle: 'MIDNIGHT LOSS TIME',
   },
 ];

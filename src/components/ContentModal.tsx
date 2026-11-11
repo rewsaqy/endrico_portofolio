@@ -58,7 +58,7 @@ export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) 
               <div className="flex flex-col md:flex-row gap-6 items-start">
                 <div className="w-full md:w-1/3 bg-black p-4 border-2 border-white shadow-[6px_6px_0px_#ffffff]">
                   <img
-                    src="/anko.png"
+                    src={`${import.meta.env.BASE_URL}anko.png`}
                     alt="Anko Uguisu Detective"
                     className="w-full h-auto object-cover grayscale contrast-125 border border-zinc-800"
                   />

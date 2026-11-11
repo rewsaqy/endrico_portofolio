@@ -36,6 +36,10 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
     sfx.playSelect();
   };
 
+  const base = import.meta.env.BASE_URL || '/';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  const resolvedSrc = src.startsWith('/') ? `${cleanBase}${src.slice(1)}` : src;
+
   return (
     <div className="relative w-full mt-6 md:mt-0 opacity-100 pointer-events-auto md:w-6/12 lg:w-7/12 md:h-full flex items-end justify-center md:justify-end select-none z-10 animate-slideInRight">
       {/* Giant Rotating Manga Star / Moon Motif with parallax */}
@@ -110,7 +114,7 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
         {/* Subtle breathing / floating shadow */}
         <div className="w-full h-full flex items-end justify-center animate-idleFloat overflow-visible">
           <img
-            src={src}
+            src={resolvedSrc}
             alt={alt}
             className={`w-full h-full object-contain object-bottom transition-all duration-300 ${
               isHovered
