@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import { 
-  Eye, 
-  ShieldAlert, 
-  Radio, 
-  Activity, 
-  Volume2, 
-  Cpu, 
-  Sparkles, 
-  Trophy, 
-  Shield, 
-  Search, 
-  FileText, 
-  Box, 
-  Layers, 
-  Clock 
+import {
+  ShieldAlert,
+  Radio,
+  Activity,
+  Volume2,
+  Cpu,
+  Trophy,
+  Shield,
+  Search,
+  FileText,
+  Box,
+  Layers,
+  Clock
 } from 'lucide-react';
 import { MangaCharacter } from '../components/MangaCharacter';
 import { PageId } from '../components/HeaderNav';
@@ -123,42 +121,41 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
               : 'border-zinc-800 hover:border-zinc-500 hover:scale-[1.005]';
 
             return (
-              <div
+              <button
+                type="button"
                 key={proj.id}
+                aria-pressed={isSelected}
                 onClick={() => {
                   sfx.playSelect();
                   setActiveProject(proj.id);
                 }}
-                className={`relative overflow-hidden bg-black border-2 p-2.5 sm:p-3 transition-all duration-300 cursor-pointer ${borderTheme}`}
+                className={`w-full text-left relative overflow-hidden bg-black border-2 p-2.5 sm:p-3 transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 ${borderTheme}`}
               >
                 {/* Visual badges/effects for each specific project */}
                 {proj.id === 'silent-universe' && (
-                  <>
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-500/10 to-transparent pointer-events-none opacity-40 animate-fnafScanline" />
-                    <div className="absolute top-2 right-2 flex items-center gap-1 font-mono text-[9px] text-red-500 font-bold bg-black/80 px-1 border border-red-900 z-10">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-recBlink" />
-                      <span>REC [CAM-02]</span>
-                    </div>
-                  </>
+                  <div className="absolute top-2 right-2 flex items-center gap-1 font-mono text-[9px] text-red-400 font-bold bg-black/80 px-1 border border-red-900 z-10">
+                    <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                    <span>REC [CAM-02]</span>
+                  </div>
                 )}
 
                 {proj.id === 'algorhythm' && (
                   <div className="absolute top-2 right-2 flex items-center gap-1 font-mono text-[9px] text-cyan-400 font-bold bg-black/80 px-1 border border-cyan-800 z-10">
-                    <Trophy size={10} className="text-cyan-400" />
+                    <Trophy size={10} aria-hidden="true" className="text-cyan-400" />
                     <span>JUARA 2 OTN 8</span>
                   </div>
                 )}
 
                 {proj.id === 'eight-months' && (
                   <div className="absolute top-2 right-2 flex items-center gap-1 font-mono text-[9px] text-amber-400 font-bold bg-black/80 px-1 border border-amber-800 z-10">
-                    <Search size={10} className="text-amber-400" />
+                    <Search size={10} aria-hidden="true" className="text-amber-400" />
                     <span>CBT // HIATUS</span>
                   </div>
                 )}
 
                 {proj.id === 'anime-3d-models' && (
                   <div className="absolute top-2 right-2 flex items-center gap-1 font-mono text-[9px] text-white font-bold bg-black/80 px-1 border border-zinc-700 z-10">
-                    <Box size={10} className="text-white" />
+                    <Box size={10} aria-hidden="true" className="text-white" />
                     <span>BLENDER 3D</span>
                   </div>
                 )}
@@ -186,7 +183,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
                   </span>
                 </div>
 
-                <p className="text-xs text-zinc-400 mt-1 leading-snug line-clamp-2">
+                <p className="text-xs text-zinc-300 mt-1 leading-snug line-clamp-2">
                   {proj.description}
                 </p>
 
@@ -210,7 +207,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
                     </span>
                   ))}
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -218,12 +215,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
         {/* BESPOKE INTERACTIVE HUD DRAWER FOR EACH PROJECT */}
         {selectedProj.id === 'silent-universe' && (
           <div className="relative overflow-hidden bg-black border-2 border-red-700/80 p-2 sm:p-3 shadow-[3px_3px_0px_#990000] sm:shadow-[4px_4px_0px_#990000] font-mono text-xs">
-            {/* Background CRT scanline */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none animate-fnafScanline opacity-50" />
-
             <div className="flex items-center justify-between pb-1 sm:pb-1.5 mb-1.5 sm:mb-2 border-b border-red-900 text-red-400 text-[10px] sm:text-[11px] font-bold">
               <div className="flex items-center gap-1.5">
-                <ShieldAlert size={13} className="text-red-500 animate-pulse sm:w-3.5 sm:h-3.5" />
+                <ShieldAlert size={13} aria-hidden="true" className="text-red-500 sm:w-3.5 sm:h-3.5" />
                 <span className="truncate">SURVEILLANCE NIGHT MONITOR</span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
@@ -235,35 +229,28 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-[9px] sm:text-[10px]">
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-red-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Activity size={9} className="text-red-400" />
+                  <Activity size={9} aria-hidden="true" className="text-red-400" />
                   <span className="truncate">STATUS</span>
                 </div>
-                <div className="w-full bg-zinc-900 h-1 sm:h-1.5 mt-0.5 sm:mt-1 border border-zinc-700 overflow-hidden">
-                  <div className="bg-red-500 h-full w-[100%] opacity-60" />
-                </div>
-                <span className="text-red-300 font-bold mt-0.5 block truncate">HIATUS</span>
+                <span className="text-red-300 font-bold mt-1 block truncate">ARCHIVED HIATUS</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">PSX Horror Build</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-red-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Volume2 size={9} className="text-red-400" />
-                  <span className="truncate">RADAR</span>
+                  <Volume2 size={9} aria-hidden="true" className="text-red-400" />
+                  <span className="truncate">SYSTEM</span>
                 </div>
-                <div className="flex gap-0.5 mt-0.5 sm:mt-1 items-end h-2">
-                  <span className="w-1 bg-red-800 h-full" />
-                  <span className="w-1 bg-red-800 h-2/3" />
-                  <span className="w-1 bg-red-900 h-1/2" />
-                  <span className="w-1 bg-red-800 h-3/4" />
-                </div>
-                <span className="text-zinc-400 font-bold mt-0.5 block truncate">STANDBY</span>
+                <span className="text-white font-bold mt-1 block truncate">CCTV FEED</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">URP Retro Shader</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-red-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Cpu size={9} className="text-red-400" />
-                  <span className="truncate">AI STATE</span>
+                  <Cpu size={9} aria-hidden="true" className="text-red-400" />
+                  <span className="truncate">ENEMY AI</span>
                 </div>
-                <span className="text-white font-bold block mt-0.5 truncate">HALLWAY 03</span>
+                <span className="text-white font-bold block mt-1 truncate">LOST ONE AI</span>
                 <span className="text-[8px] sm:text-[9px] text-red-400 block truncate">OFFLINE</span>
               </div>
             </div>
@@ -272,12 +259,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
 
         {selectedProj.id === 'algorhythm' && (
           <div className="relative overflow-hidden bg-black border-2 border-cyan-500/80 p-2 sm:p-3 shadow-[3px_3px_0px_#06b6d4] sm:shadow-[4px_4px_0px_#06b6d4] font-mono text-xs">
-            {/* Grid overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(#06b6d4_1px,transparent_1px)] [background-size:12px_12px] opacity-10 pointer-events-none" />
-
             <div className="flex items-center justify-between pb-1 sm:pb-1.5 mb-1.5 sm:mb-2 border-b border-cyan-900/70 text-cyan-400 text-[10px] sm:text-[11px] font-bold">
               <div className="flex items-center gap-1.5">
-                <Trophy size={13} className="text-cyan-400 animate-pulse sm:w-3.5 sm:h-3.5" />
+                <Trophy size={13} aria-hidden="true" className="text-cyan-400 sm:w-3.5 sm:h-3.5" />
                 <span className="truncate">CYBER RHYTHM TERMINAL // OTN 8</span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
@@ -290,34 +274,29 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-[9px] sm:text-[10px]">
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-cyan-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Radio size={9} className="text-cyan-400" />
-                  <span className="truncate">DSP CLOCK</span>
+                  <Radio size={9} aria-hidden="true" className="text-cyan-400" />
+                  <span className="truncate">AUDIO ENGINE</span>
                 </div>
-                <div className="flex items-center gap-1 mt-0.5 sm:mt-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                  <span className="text-cyan-300 font-bold truncate">140 BPM</span>
-                </div>
-                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">0ms Audio Drift</span>
+                <span className="text-cyan-300 font-bold block mt-1 truncate">DSP CLOCK SYNC</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">Beat Investigation</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-cyan-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Shield size={9} className="text-cyan-400" />
-                  <span className="truncate">CYBER SHIELD</span>
+                  <Shield size={9} aria-hidden="true" className="text-cyan-400" />
+                  <span className="truncate">GENRE</span>
                 </div>
-                <div className="w-full bg-zinc-900 h-1 sm:h-1.5 mt-0.5 sm:mt-1 border border-zinc-700 overflow-hidden">
-                  <div className="bg-cyan-400 h-full w-[92%]" />
-                </div>
-                <span className="text-cyan-300 font-bold mt-0.5 block truncate">92% INTEGRITY</span>
+                <span className="text-cyan-300 font-bold block mt-1 truncate">CYBER DEFENSE</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">Rhythm Mechanics</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-cyan-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Cpu size={9} className="text-cyan-400" />
+                  <Cpu size={9} aria-hidden="true" className="text-cyan-400" />
                   <span className="truncate">ARCHITECTURE</span>
                 </div>
-                <span className="text-white font-bold block mt-0.5 truncate">MODULAR C#</span>
-                <span className="text-[8px] sm:text-[9px] text-cyan-300 block truncate">Rhythm Core</span>
+                <span className="text-white font-bold block mt-1 truncate">MODULAR C#</span>
+                <span className="text-[8px] sm:text-[9px] text-cyan-300 block truncate">Unity 2D/3D Core</span>
               </div>
             </div>
           </div>
@@ -325,12 +304,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
 
         {selectedProj.id === 'eight-months' && (
           <div className="relative overflow-hidden bg-black border-2 border-amber-600/80 p-2 sm:p-3 shadow-[3px_3px_0px_#d97706] sm:shadow-[4px_4px_0px_#d97706] font-mono text-xs">
-            {/* Subtle dossier watermark */}
-            <div className="absolute -right-6 -bottom-6 w-24 h-24 border border-amber-600/10 rounded-full pointer-events-none" />
-
             <div className="flex items-center justify-between pb-1 sm:pb-1.5 mb-1.5 sm:mb-2 border-b border-amber-900/70 text-amber-400 text-[10px] sm:text-[11px] font-bold">
               <div className="flex items-center gap-1.5">
-                <Search size={13} className="text-amber-500 animate-pulse sm:w-3.5 sm:h-3.5" />
+                <Search size={13} aria-hidden="true" className="text-amber-500 sm:w-3.5 sm:h-3.5" />
                 <span className="truncate">CRIME DEDUCTION DOSSIER // CBT</span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
@@ -343,31 +319,29 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-[9px] sm:text-[10px]">
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-amber-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <FileText size={9} className="text-amber-400" />
+                  <FileText size={9} aria-hidden="true" className="text-amber-400" />
                   <span className="truncate">CASE FILE</span>
                 </div>
-                <span className="text-white font-bold block mt-0.5 sm:mt-1 truncate">#08-SILENCE</span>
+                <span className="text-white font-bold block mt-1 truncate">#08-SILENCE</span>
                 <span className="text-[8px] sm:text-[9px] text-amber-300 block truncate">Psychological Thriller</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-amber-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Box size={9} className="text-amber-400" />
+                  <Box size={9} aria-hidden="true" className="text-amber-400" />
                   <span className="truncate">3D EVIDENCE</span>
                 </div>
-                <div className="w-full bg-zinc-900 h-1 sm:h-1.5 mt-0.5 sm:mt-1 border border-zinc-700 overflow-hidden">
-                  <div className="bg-amber-400 h-full w-[67%]" />
-                </div>
-                <span className="text-amber-300 font-bold mt-0.5 block truncate">8/12 SAMPLES</span>
+                <span className="text-amber-300 font-bold block mt-1 truncate">INSPECTION 3D</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">Crime Deduction</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-amber-900/60">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Clock size={9} className="text-amber-400" />
-                  <span className="truncate">TIMELINE</span>
+                  <Clock size={9} aria-hidden="true" className="text-amber-400" />
+                  <span className="truncate">STAGE</span>
                 </div>
-                <span className="text-white font-bold block mt-0.5 truncate">OCT 14, 02:40 AM</span>
-                <span className="text-[8px] sm:text-[9px] text-amber-400 block truncate">CBT Test Phase</span>
+                <span className="text-white font-bold block mt-1 truncate">CBT BUILD</span>
+                <span className="text-[8px] sm:text-[9px] text-amber-400 block truncate">Status: Hiatus</span>
               </div>
             </div>
           </div>
@@ -375,12 +349,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
 
         {selectedProj.id === 'anime-3d-models' && (
           <div className="relative overflow-hidden bg-black border-2 border-zinc-200 p-2 sm:p-3 shadow-[3px_3px_0px_#ffffff] sm:shadow-[4px_4px_0px_#ffffff] font-mono text-xs">
-            {/* Manga dot matrix overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:10px_10px] opacity-10 pointer-events-none" />
-
             <div className="flex items-center justify-between pb-1 sm:pb-1.5 mb-1.5 sm:mb-2 border-b border-zinc-700 text-white text-[10px] sm:text-[11px] font-bold">
               <div className="flex items-center gap-1.5">
-                <Layers size={13} className="text-white animate-pulse sm:w-3.5 sm:h-3.5" />
+                <Layers size={13} aria-hidden="true" className="text-white sm:w-3.5 sm:h-3.5" />
                 <span className="truncate">BLENDER 3D VIEWPORT // TOPOLOGY</span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
@@ -393,30 +364,28 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-[9px] sm:text-[10px]">
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-zinc-700">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Box size={9} className="text-zinc-200" />
+                  <Box size={9} aria-hidden="true" className="text-zinc-200" />
                   <span className="truncate">TOPOLOGY</span>
                 </div>
-                <span className="text-white font-bold block mt-0.5 sm:mt-1 truncate">24.8K QUADS</span>
+                <span className="text-white font-bold block mt-1 truncate">STYLIZED QUADS</span>
                 <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">Sub-D Clean Flow</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-zinc-700">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Activity size={9} className="text-zinc-200" />
-                  <span className="truncate">RIG & BLENDSHAPES</span>
+                  <Activity size={9} aria-hidden="true" className="text-zinc-200" />
+                  <span className="truncate">RIG &amp; FACIAL</span>
                 </div>
-                <div className="w-full bg-zinc-900 h-1 sm:h-1.5 mt-0.5 sm:mt-1 border border-zinc-700 overflow-hidden">
-                  <div className="bg-white h-full w-[85%]" />
-                </div>
-                <span className="text-zinc-200 font-bold mt-0.5 block truncate">IK/FK + FACIAL 52</span>
+                <span className="text-zinc-200 font-bold block mt-1 truncate">IK/FK + SHAPEKEYS</span>
+                <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">Weight Painted</span>
               </div>
 
               <div className="bg-zinc-950 p-1 sm:p-1.5 border border-zinc-700">
                 <div className="flex items-center gap-1 text-zinc-400">
-                  <Sparkles size={9} className="text-zinc-200" />
+                  <Layers size={9} aria-hidden="true" className="text-zinc-200" />
                   <span className="truncate">SHADER</span>
                 </div>
-                <span className="text-white font-bold block mt-0.5 truncate">NPR CEL-SHADE</span>
+                <span className="text-white font-bold block mt-1 truncate">NPR CEL-SHADE</span>
                 <span className="text-[8px] sm:text-[9px] text-zinc-400 block truncate">Blender &rarr; Unity</span>
               </div>
             </div>
@@ -426,11 +395,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onNavigate }) => {
         {/* Navigation Action Buttons */}
         <div className="pt-1 flex items-center gap-3">
           <button
+            type="button"
             onClick={() => {
               sfx.playBack();
               onNavigate('home');
             }}
-            className="flex items-center gap-2 bg-white text-black font-black font-mono text-xs px-5 py-2.5 hover:bg-zinc-200 transition-all shadow-[4px_4px_0px_#000000] border-2 border-black cursor-pointer"
+            className="min-h-[44px] flex items-center gap-2 bg-white text-black font-black font-mono text-xs px-5 py-2.5 hover:bg-zinc-200 transition-all shadow-[4px_4px_0px_#ffffff] border-2 border-black cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
           >
             <span>◀ KEMBALI KE MENU UTAMA</span>
           </button>

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { X, ExternalLink, Sparkles, Box, Gamepad2, Wrench, Send, Moon } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { X, ExternalLink, Box, Gamepad2, Wrench, Send, Moon } from 'lucide-react';
 import { sfx } from '../utils/sfx';
 
 interface ContentModalProps {
@@ -8,23 +8,54 @@ interface ContentModalProps {
 }
 
 export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) => {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+
   useEffect(() => {
+    if (!section) return;
+    const prevFocus = document.activeElement as HTMLElement | null;
+    closeBtnRef.current?.focus();
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         sfx.playBack();
         onClose();
+        return;
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      prevFocus?.focus();
+    };
+  }, [section, onClose]);
 
   if (!section) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/90 animate-fadeIn">
       {/* Dynamic angled backdrop - Manga Noir Style */}
-      <div 
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="content-modal-title"
         className="relative w-full max-w-4xl bg-[#09090d] border-[3px] border-white shadow-[12px_12px_0px_#ffffff] overflow-hidden transform -rotate-1 transition-all"
         style={{ clipPath: 'polygon(0 0, 100% 0, 98% 100%, 2% 100%)' }}
       >
@@ -32,21 +63,24 @@ export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) 
         <div className="bg-white text-black font-black px-6 py-3.5 flex items-center justify-between border-b-[3px] border-black">
           <div className="flex items-center gap-3">
             <span className="bg-black text-white px-2 py-0.5 text-xs font-mono font-bold tracking-widest uppercase flex items-center gap-1">
-              <Moon size={12} className="fill-white" />
+              <Moon size={12} aria-hidden="true" className="fill-white" />
               YOFUKASHI // CASE FILE
             </span>
-            <span className="text-xl tracking-tighter uppercase font-extrabold text-black">
+            <span id="content-modal-title" className="text-xl tracking-tighter uppercase font-extrabold text-black">
               {section}
             </span>
           </div>
           <button
+            ref={closeBtnRef}
+            type="button"
+            aria-label="Tutup dialog"
             onClick={() => {
               sfx.playBack();
               onClose();
             }}
-            className="bg-black text-white hover:bg-zinc-800 font-bold p-1 px-3 border border-black transition-all flex items-center gap-1 text-sm cursor-pointer"
+            className="min-h-[44px] bg-black text-white hover:bg-zinc-800 font-bold py-1.5 px-3 border border-black transition-all flex items-center gap-1 text-sm cursor-pointer focus-visible:outline-2 focus-visible:outline-black focus-visible:outline-offset-2"
           >
-            <X size={18} />
+            <X size={18} aria-hidden="true" />
             <span>[ESC] CLOSE</span>
           </button>
         </div>
@@ -60,6 +94,8 @@ export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) 
                   <img
                     src={`${import.meta.env.BASE_URL}anko.png`}
                     alt="Anko Uguisu Detective"
+                    width={320}
+                    height={400}
                     className="w-full h-auto object-cover grayscale contrast-125 border border-zinc-800"
                   />
                   <div className="mt-3 text-center">
@@ -72,8 +108,8 @@ export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) 
                 <div className="w-full md:w-2/3 space-y-4">
                   <div className="bg-[#121218] p-5 border-l-4 border-white">
                     <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-2">
-                      <Sparkles className="text-white" size={20} />
-                      3D Artist & Game Designer
+                      <span aria-hidden="true" className="text-white">✦</span>
+                      3D Artist &amp; Game Designer
                     </h3>
                     <p className="text-gray-300 text-sm mt-2 leading-relaxed">
                       Menciptakan aset 3D bergaya anime/stylized, environment game bernuansa malam atmosferik (Call of the Night aesthetic), dan perancangan gameplay mechanics mendalam. Menggabungkan estetika visual manga dengan logika game development.
@@ -277,13 +313,10 @@ export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) 
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <a
-                    href="mailto:endrico@example.com"
-                    className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-700 hover:border-white hover:bg-zinc-900 transition-all text-white font-mono text-sm"
-                  >
+                  <div className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 text-zinc-400 font-mono text-sm">
                     <span>EMAIL // DIRECT INBOX</span>
-                    <ExternalLink size={16} className="text-white" />
-                  </a>
+                    <span className="text-xs bg-zinc-800 px-2 py-0.5 text-zinc-300">[REAL DATA]</span>
+                  </div>
 
                   <a
                     href="https://github.com/rewsaqy"
@@ -292,22 +325,17 @@ export const ContentModal: React.FC<ContentModalProps> = ({ section, onClose }) 
                     className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-700 hover:border-white hover:bg-zinc-900 transition-all text-white font-mono text-sm"
                   >
                     <span>GITHUB // @rewsaqy</span>
-                    <ExternalLink size={16} className="text-white" />
+                    <ExternalLink size={16} aria-hidden="true" className="text-white" />
                   </a>
 
-                  <a
-                    href="https://discord.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-700 hover:border-white hover:bg-zinc-900 transition-all text-white font-mono text-sm"
-                  >
+                  <div className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-700 text-white font-mono text-sm">
                     <span>DISCORD // rewsaqy</span>
-                    <ExternalLink size={16} className="text-white" />
-                  </a>
+                    <span className="text-xs bg-zinc-800 px-2 py-0.5 text-zinc-300">USERNAME</span>
+                  </div>
 
-                  <div className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 text-zinc-500 font-mono text-sm">
+                  <div className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 text-zinc-400 font-mono text-sm">
                     <span>ARTSTATION // COMING SOON</span>
-                    <span className="text-xs bg-zinc-800 px-2 py-0.5 text-zinc-400">WIP</span>
+                    <span className="text-xs bg-zinc-800 px-2 py-0.5 text-zinc-300">WIP</span>
                   </div>
                 </div>
               </div>

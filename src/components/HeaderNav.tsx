@@ -36,16 +36,17 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ currentPage, onNavigate })
         </div>
       ) : (
         <button
+          type="button"
           onClick={() => {
             sfx.playBack();
             onNavigate('home');
           }}
-          className="bg-white text-black hover:bg-zinc-200 px-3 sm:px-5 py-1.5 sm:py-2 border-2 border-black shadow-[3px_3px_0px_#ffffff] sm:shadow-[4px_4px_0px_#ffffff] yofu-badge-skew flex items-center gap-2 cursor-pointer transition-all transform hover:-translate-x-1 shrink-0"
+          className="min-h-[44px] bg-white text-black hover:bg-zinc-200 px-3 sm:px-5 py-2 border-2 border-black shadow-[3px_3px_0px_#ffffff] sm:shadow-[4px_4px_0px_#ffffff] yofu-badge-skew flex items-center gap-2 cursor-pointer transition-all transform hover:-translate-x-1 shrink-0 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
         >
           <div className="yofu-badge-unskew flex items-center gap-1.5 sm:gap-2">
-            <ArrowLeft size={14} className="text-black sm:w-4 sm:h-4" />
+            <ArrowLeft size={14} aria-hidden="true" className="text-black sm:w-4 sm:h-4" />
             <span className="font-mono text-xs sm:text-sm font-black tracking-widest uppercase">
-              ◀ KEMBALI
+              KEMBALI
             </span>
           </div>
         </button>

@@ -231,13 +231,14 @@ const AppContent: React.FC = () => {
               </div>
             </>
           ) : (
-            <div 
+            <button
+              type="button"
               onClick={() => handleNavigate('home')}
-              className="flex items-center gap-1.5 cursor-pointer hover:text-white text-zinc-300"
+              className="flex items-center gap-1.5 cursor-pointer hover:text-white text-zinc-300 bg-transparent border-0 p-0 focus-visible:outline-2 focus-visible:outline-white"
             >
               <span className="bg-white text-black px-1.5 py-0.5 font-bold font-mono">ESC</span>
               <span>KEMBALI KE HOME</span>
-            </div>
+            </button>
           )}
 
           <div className="hidden xl:flex items-center gap-1.5 text-zinc-400">
@@ -254,19 +255,22 @@ const AppContent: React.FC = () => {
         {/* Audio Toggle & Clock (Desktop/Tablet) */}
         <div className="hidden sm:flex items-center gap-3 shrink-0">
           <button
+            type="button"
             onClick={toggleSound}
-            className="flex items-center gap-1.5 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+            aria-label={soundEnabled ? 'Matikan efek suara SFX' : 'Aktifkan efek suara SFX'}
+            aria-pressed={soundEnabled}
+            className="flex items-center gap-1.5 text-zinc-300 hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 focus-visible:outline-2 focus-visible:outline-white"
             title="Toggle SFX (M)"
           >
             {soundEnabled ? (
               <>
-                <Volume2 size={15} className="text-white" />
+                <Volume2 size={15} aria-hidden="true" className="text-white" />
                 <span className="inline text-[11px]">SFX: ON</span>
               </>
             ) : (
               <>
-                <VolumeX size={15} className="text-zinc-500" />
-                <span className="inline text-zinc-500 text-[11px]">SFX: OFF</span>
+                <VolumeX size={15} aria-hidden="true" className="text-zinc-400" />
+                <span className="inline text-zinc-400 text-[11px]">SFX: OFF</span>
               </>
             )}
           </button>

@@ -158,42 +158,61 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Mobile Category Switcher (Visible only on mobile < md) */}
-        <div className="flex md:hidden items-center gap-1.5 font-mono text-[10px] pt-0.5">
+        <div
+          role="tablist"
+          aria-label="Kategori Keahlian"
+          className="flex md:hidden items-center gap-1.5 font-mono text-[10px] pt-0.5"
+        >
           <button
+            type="button"
+            role="tab"
+            id="tab-skills-3d"
+            aria-selected={mobileTab === '3d'}
+            aria-controls="panel-skills-mobile"
             onClick={() => {
               sfx.playHover();
               setMobileTab('3d');
             }}
-            className={`flex-1 py-1 px-1.5 border font-bold uppercase transition-all ${
+            className={`min-h-[44px] flex-1 py-2 px-1.5 border font-bold uppercase transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-white ${
               mobileTab === '3d'
                 ? 'bg-white text-black border-white shadow-[2px_2px_0px_#ffffff]'
-                : 'bg-zinc-950 text-zinc-400 border-zinc-800'
+                : 'bg-zinc-950 text-zinc-300 border-zinc-800'
             }`}
           >
             3D ART
           </button>
           <button
+            type="button"
+            role="tab"
+            id="tab-skills-game"
+            aria-selected={mobileTab === 'game'}
+            aria-controls="panel-skills-mobile"
             onClick={() => {
               sfx.playHover();
               setMobileTab('game');
             }}
-            className={`flex-1 py-1 px-1.5 border font-bold uppercase transition-all ${
+            className={`min-h-[44px] flex-1 py-2 px-1.5 border font-bold uppercase transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-white ${
               mobileTab === 'game'
                 ? 'bg-white text-black border-white shadow-[2px_2px_0px_#ffffff]'
-                : 'bg-zinc-950 text-zinc-400 border-zinc-800'
+                : 'bg-zinc-950 text-zinc-300 border-zinc-800'
             }`}
           >
             GAME DESIGN
           </button>
           <button
+            type="button"
+            role="tab"
+            id="tab-skills-pipeline"
+            aria-selected={mobileTab === 'pipeline'}
+            aria-controls="panel-skills-mobile"
             onClick={() => {
               sfx.playHover();
               setMobileTab('pipeline');
             }}
-            className={`flex-1 py-1 px-1.5 border font-bold uppercase transition-all ${
+            className={`min-h-[44px] flex-1 py-2 px-1.5 border font-bold uppercase transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-white ${
               mobileTab === 'pipeline'
                 ? 'bg-white text-black border-white shadow-[2px_2px_0px_#ffffff]'
-                : 'bg-zinc-950 text-zinc-400 border-zinc-800'
+                : 'bg-zinc-950 text-zinc-300 border-zinc-800'
             }`}
           >
             PIPELINE
@@ -201,7 +220,12 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Mobile View: Render active card */}
-        <div className="block md:hidden w-full">
+        <div
+          id="panel-skills-mobile"
+          role="tabpanel"
+          aria-labelledby={`tab-skills-${mobileTab}`}
+          className="block md:hidden w-full"
+        >
           {mobileTab === '3d' && render3DCard()}
           {mobileTab === 'game' && renderGameCard()}
           {mobileTab === 'pipeline' && renderPipelineCard()}
@@ -217,11 +241,12 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onNavigate }) => {
         {/* Navigation Action Button */}
         <div className="pt-0.5 flex items-center gap-3">
           <button
+            type="button"
             onClick={() => {
               sfx.playBack();
               onNavigate('home');
             }}
-            className="flex items-center gap-2 bg-white text-black font-black font-mono text-xs px-4 py-2 hover:bg-zinc-200 transition-all shadow-[4px_4px_0px_#000000] border-2 border-black cursor-pointer"
+            className="min-h-[44px] flex items-center gap-2 bg-white text-black font-black font-mono text-xs px-4 py-2.5 hover:bg-zinc-200 transition-all shadow-[4px_4px_0px_#ffffff] border-2 border-black cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
           >
             <span>◀ KEMBALI KE MENU UTAMA</span>
           </button>

@@ -17,7 +17,7 @@ export const YofukashiTitle: React.FC<YofukashiTitleProps> = ({
       <div className="text-[9px] sm:text-[11px] font-mono tracking-[0.2em] sm:tracking-[0.3em] text-zinc-400 uppercase flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white inline-block" />
         <span>よふかしのうた // NOCTURNAL OPERATIVE</span>
-        <span className="text-zinc-600 hidden xs:inline">//</span>
+        <span className="text-zinc-400 hidden xs:inline">//</span>
         <span className="text-zinc-300 font-bold hidden xs:inline">2026</span>
       </div>
 

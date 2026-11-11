@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Disc3, Terminal, Activity, Zap, Radio, Shield, Sparkles } from 'lucide-react';
+import { Disc3, Terminal, Zap, Radio } from 'lucide-react';
 import { sfx } from '../utils/sfx';
 
 interface MangaLoadingScreenProps {
@@ -134,7 +134,7 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
         {/* ARCADE HEADER HUD */}
         <header className="relative z-10 flex items-center justify-between border-b-2 border-white pb-2.5 font-mono text-[11px] sm:text-xs">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 bg-red-600 animate-ping inline-block" />
+            <span aria-hidden="true" className="w-2.5 h-2.5 bg-red-600 inline-block" />
             <span className="bg-white text-black font-black px-1.5 py-0.5 uppercase tracking-widest">
               SYSTEM BOOT
             </span>
@@ -145,10 +145,10 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 bg-zinc-950 px-2 py-0.5 border border-zinc-800 text-[10px] sm:text-[11px] text-zinc-300">
-              <Radio size={11} className="text-red-500 animate-pulse" />
+              <Radio size={11} aria-hidden="true" className="text-red-500" />
               <span>DEFAULT BGM: 01 // 堕天 (DATEN)</span>
             </div>
-            <span className="text-zinc-500 hidden md:inline font-bold">60 FPS</span>
+            <span className="text-zinc-400 hidden md:inline font-bold">60 FPS</span>
           </div>
         </header>
 
@@ -157,10 +157,10 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
           {/* Tactical Character Target Cell */}
           <div className="relative w-40 sm:w-56 md:w-64 h-52 sm:h-72 md:h-80 flex items-end justify-center shrink-0">
             {/* Comic Frame Crosshair Accents */}
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-white" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-white" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-white" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-white" />
+            <div aria-hidden="true" className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-white" />
+            <div aria-hidden="true" className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-white" />
+            <div aria-hidden="true" className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-white" />
+            <div aria-hidden="true" className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-white" />
 
             {/* Target Reticle Indicator */}
             <div className="absolute top-2 left-2 bg-black/80 px-1 border border-zinc-700 text-[9px] font-mono text-zinc-300 z-10">
@@ -170,11 +170,15 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
             <img
               src={characterSrc}
               alt="Anko Uguisu Detective Boot"
+              width={256}
+              height={320}
+              loading="eager"
+              fetchPriority="high"
               className="w-full h-full object-contain object-bottom drop-shadow-[0_0_24px_rgba(255,255,255,0.35)] filter contrast-125"
             />
 
             {/* Authentic Manga Onomatopoeia Stamp */}
-            <div className="absolute -top-3 -right-3 font-sans font-black text-2xl text-white tracking-widest animate-pulse opacity-80 drop-shadow-[3px_3px_0px_#000000]">
+            <div aria-hidden="true" className="absolute -top-3 -right-3 font-sans font-black text-2xl text-white tracking-widest opacity-80 drop-shadow-[3px_3px_0px_#000000]">
               ドォン!
             </div>
           </div>
@@ -191,7 +195,7 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
             </div>
 
             <div>
-              <h1 className="font-sans font-black text-4xl sm:text-6xl tracking-tight uppercase text-white drop-shadow-[4px_4px_0px_#ffffff] leading-none">
+              <h1 className="font-sans font-black text-4xl sm:text-6xl tracking-tight uppercase text-white drop-shadow-[4px_4px_0px_#000000] leading-none">
                 ENDRICO
               </h1>
               <p className="font-mono text-xs sm:text-sm font-bold text-zinc-400 tracking-wider mt-1">
@@ -203,7 +207,7 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
             <div className="bg-black/95 border-2 border-zinc-800 p-3 sm:p-4 shadow-[4px_4px_0px_#27272a] font-mono text-xs space-y-2 text-left">
               <div className="flex items-center justify-between text-[10px] text-zinc-400 border-b border-zinc-900 pb-1">
                 <span className="flex items-center gap-1.5 text-white">
-                  <Terminal size={11} className="text-red-500" />
+                  <Terminal size={11} aria-hidden="true" className="text-red-500" />
                   <span>MEMORY HEAP ALLOCATION</span>
                 </span>
                 <span className="font-bold text-white">
@@ -212,7 +216,7 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
               </div>
 
               <div className="text-[11px] sm:text-xs text-white flex items-center gap-2">
-                <span className="text-red-500 font-black animate-pulse">❯</span>
+                <span aria-hidden="true" className="text-red-500 font-black">❯</span>
                 <span className="truncate">{GAME_SYSTEM_LOGS[logIndex].text}</span>
               </div>
 
@@ -231,11 +235,12 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
               </div>
             </div>
 
-            {/* Dynamic Status / Flashing Arcade State */}
+            {/* Dynamic Status / Arcade State */}
             <div className="flex items-center justify-between pt-1 font-mono text-xs">
               <div className="flex items-center gap-2 text-zinc-300">
                 <Disc3
                   size={16}
+                  aria-hidden="true"
                   className="animate-spin text-white shrink-0"
                   style={{ animationDuration: '2s' }}
                 />
@@ -246,21 +251,21 @@ export const MangaLoadingScreen: React.FC<MangaLoadingScreenProps> = ({ onComple
                 </span>
               </div>
 
-              <span className="text-[10px] text-zinc-400 bg-zinc-950 px-2 py-0.5 border border-zinc-800">
+              <span className="text-[10px] text-zinc-300 bg-zinc-950 px-2 py-0.5 border border-zinc-800">
                 AUTO-PLAY ENABLED
               </span>
             </div>
 
-            <p className="font-mono text-[9px] sm:text-[10px] text-zinc-500 tracking-wider">
-              ★ OTOMATIS MEMULAI LAGU "堕天 (DATEN)" SAAT SELESAI • TAP/KLIK UNTUK FAST-FORWARD
+            <p className="font-mono text-[9px] sm:text-[10px] text-zinc-400 tracking-wider">
+              ✦ OTOMATIS MEMULAI LAGU &quot;堕天 (DATEN)&quot; SAAT SELESAI // TAP ATAU KLIK UNTUK FAST-FORWARD
             </p>
           </div>
         </main>
 
         {/* BOTTOM HUD FOOTER */}
-        <footer className="relative z-10 flex items-center justify-between border-t border-zinc-800 pt-2 font-mono text-[10px] text-zinc-500">
+        <footer className="relative z-10 flex items-center justify-between border-t border-zinc-800 pt-2 font-mono text-[10px] text-zinc-400">
           <div className="flex items-center gap-1.5">
-            <Zap size={11} className="text-white" />
+            <Zap size={11} aria-hidden="true" className="text-white" />
             <span>STREAM: 44.1kHz • STEREO • DSP CLOCK SYNC</span>
           </div>
 

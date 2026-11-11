@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { sfx } from '../utils/sfx';
 
 interface YofukashiButtonProps {
@@ -23,6 +23,7 @@ export const YofukashiButton: React.FC<YofukashiButtonProps> = ({
 }) => {
   return (
     <button
+      type="button"
       onClick={() => {
         sfx.playSelect();
         onClick();
@@ -76,7 +77,7 @@ export const YofukashiButton: React.FC<YofukashiButtonProps> = ({
                 </span>
                 <span
                   className={`font-mono text-[9px] sm:text-xs font-bold transition-colors shrink-0 ${
-                    isActive ? 'text-zinc-700' : 'text-zinc-500 group-hover:text-zinc-300'
+                    isActive ? 'text-zinc-700' : 'text-zinc-400 group-hover:text-zinc-300'
                   }`}
                 >
                   [ {kanji} ]
@@ -98,7 +99,7 @@ export const YofukashiButton: React.FC<YofukashiButtonProps> = ({
               className={`font-mono text-[9px] sm:text-[10px] uppercase tracking-widest hidden md:inline-block px-1.5 py-0.5 border ${
                 isActive
                   ? 'border-black text-black bg-zinc-200'
-                  : 'border-zinc-800 text-zinc-500 group-hover:border-zinc-600 group-hover:text-zinc-300'
+                  : 'border-zinc-800 text-zinc-400 group-hover:border-zinc-600 group-hover:text-zinc-300'
               }`}
             >
               {isActive ? 'SELECT // OPEN' : 'VIEW FILE'}
@@ -108,10 +109,10 @@ export const YofukashiButton: React.FC<YofukashiButtonProps> = ({
               className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex items-center justify-center border transition-all ${
                 isActive
                   ? 'bg-black text-white border-black rotate-0'
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-800 group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:translate-x-1'
+                  : 'bg-zinc-900 text-zinc-300 border-zinc-800 group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:translate-x-1'
               }`}
             >
-              <ArrowRight size={13} className="sm:w-4 sm:h-4" />
+              <ArrowRight size={13} aria-hidden="true" className="sm:w-4 sm:h-4" />
             </div>
           </div>
         </div>

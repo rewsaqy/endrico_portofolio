@@ -231,7 +231,15 @@ body {
   .animate-fnafGlitch,
   .animate-recBlink,
   .animate-slideInLeft,
-  .animate-slideInRight {
+  .animate-slideInRight,
+  .animate-smoothBlade1,
+  .animate-smoothBlade2,
+  .animate-smoothText,
+  .animate-fadeOverlay,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-ping,
+  .animate-spin {
     animation: none !important;
   }
 }

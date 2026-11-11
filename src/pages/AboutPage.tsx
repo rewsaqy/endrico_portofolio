@@ -1,6 +1,5 @@
 import React from 'react';
-import { Sparkles, Terminal, MapPin, Gamepad2, ShieldCheck, ArrowRight } from 'lucide-react';
-import { RansomWord } from '../components/RansomWord';
+import { Terminal, MapPin, Gamepad2, ShieldCheck } from 'lucide-react';
 import { MangaCharacter } from '../components/MangaCharacter';
 import { PageId } from '../components/HeaderNav';
 import { sfx } from '../utils/sfx';
@@ -92,11 +91,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         {/* Navigation Action Buttons */}
         <div className="pt-1 flex items-center gap-3">
           <button
+            type="button"
             onClick={() => {
               sfx.playBack();
               onNavigate('home');
             }}
-            className="flex items-center gap-2 bg-white text-black font-black font-mono text-xs px-4 sm:px-5 py-2 sm:py-2.5 hover:bg-zinc-200 transition-all shadow-[4px_4px_0px_#000000] border-2 border-black cursor-pointer"
+            className="min-h-[44px] flex items-center gap-2 bg-white text-black font-black font-mono text-xs px-4 sm:px-5 py-2.5 hover:bg-zinc-200 transition-all shadow-[4px_4px_0px_#ffffff] border-2 border-black cursor-pointer focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
           >
             <span>◀ KEMBALI KE MENU UTAMA</span>
           </button>

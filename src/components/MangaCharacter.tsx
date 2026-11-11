@@ -7,6 +7,7 @@ interface MangaCharacterProps {
   kanjiTop?: string;
   kanjiBottom?: string;
   caption?: string;
+  priority?: boolean;
 }
 
 export const MangaCharacter: React.FC<MangaCharacterProps> = ({
@@ -15,6 +16,7 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
   kanjiTop = '餡子',
   kanjiBottom = '鶯',
   caption = 'DETECTIVE // ANKO UGUISU // NIGHTFALL',
+  priority = false,
 }) => {
   const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -58,26 +60,28 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
       </div>
 
       {/* Floating Manga Sparks */}
-      <div className="absolute top-8 right-16 text-white text-4xl font-black opacity-80 animate-bounce">
+      <div aria-hidden="true" className="absolute top-8 right-16 text-white text-4xl font-black opacity-80">
         ✦
       </div>
-      <div className="absolute top-1/4 left-4 text-white text-3xl font-black opacity-40">
+      <div aria-hidden="true" className="absolute top-1/4 left-4 text-white text-3xl font-black opacity-40">
         ★
       </div>
-      <div className="absolute bottom-40 left-0 text-white text-2xl font-black opacity-70">
+      <div aria-hidden="true" className="absolute bottom-40 left-0 text-white text-2xl font-black opacity-70">
         ✦
       </div>
 
       {/* Floating Sound Effect Onomatopoeia (スッ...) */}
-      <div 
-        className="absolute top-1/3 right-10 font-mono text-zinc-400 text-sm font-black tracking-widest opacity-60 animate-pulse pointer-events-none"
+      <div
+        aria-hidden="true"
+        className="absolute top-1/3 right-10 font-mono text-zinc-400 text-sm font-black tracking-widest opacity-60 pointer-events-none"
       >
         スッ...
       </div>
 
       {/* Authentic Manga Floating Kanji */}
       {kanjiTop && (
-        <div 
+        <div
+          aria-hidden="true"
           className="hidden lg:block absolute left-[-40px] top-1/4 text-white/[0.07] font-black text-9xl select-none pointer-events-none transition-transform duration-500"
           style={{ transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -20}px)` }}
         >
@@ -85,7 +89,8 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
         </div>
       )}
       {kanjiBottom && (
-        <div 
+        <div
+          aria-hidden="true"
           className="hidden lg:block absolute right-[-10px] top-1/3 text-white/[0.07] font-black text-9xl select-none pointer-events-none transition-transform duration-500"
           style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
         >
@@ -94,19 +99,21 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
       )}
 
       {/* Vertical Manga Label */}
-      <div className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 rotate-90 origin-right text-[11px] font-mono tracking-[0.4em] text-zinc-400 select-none pointer-events-none">
+      <div aria-hidden="true" className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 rotate-90 origin-right text-[11px] font-mono tracking-[0.4em] text-zinc-400 select-none pointer-events-none">
         {caption}
       </div>
 
       {/* LARGE ANCHORED CHARACTER CONTAINER */}
-      <div 
+      <button
+        type="button"
+        aria-label={`Efek suara interaktif karakter ${alt}`}
         onClick={handleCharacterClick}
         onMouseEnter={() => {
           setIsHovered(true);
           sfx.playHover();
         }}
         onMouseLeave={() => setIsHovered(false)}
-        className="relative z-10 w-[340px] sm:w-[440px] md:w-[500px] lg:w-[580px] h-[68vh] md:h-[76vh] lg:h-[82vh] max-h-[760px] flex items-end justify-center cursor-pointer pointer-events-auto transition-transform duration-300 ease-out overflow-visible"
+        className="relative z-10 w-[340px] sm:w-[440px] md:w-[500px] lg:w-[580px] h-[68vh] md:h-[76vh] lg:h-[82vh] max-h-[760px] flex items-end justify-center cursor-pointer pointer-events-auto transition-transform duration-300 ease-out overflow-visible bg-transparent border-0 p-0 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4"
         style={{
           transform: `perspective(1000px) rotateY(${mousePos.x * 6}deg) rotateX(${mousePos.y * -4}deg) translateY(${isHovered ? '-8px' : '0px'})`,
         }}
@@ -116,6 +123,10 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
           <img
             src={resolvedSrc}
             alt={alt}
+            width={580}
+            height={760}
+            loading="eager"
+            fetchPriority={priority ? 'high' : 'auto'}
             className={`w-full h-full object-contain object-bottom transition-all duration-300 ${
               isHovered
                 ? 'drop-shadow-[-4px_-4px_0px_#ffffff] drop-shadow-[0px_0px_24px_rgba(255,255,255,0.45)] scale-[1.02]'
@@ -123,7 +134,7 @@ export const MangaCharacter: React.FC<MangaCharacterProps> = ({
             }`}
           />
         </div>
-      </div>
+      </button>
     </div>
   );
 };

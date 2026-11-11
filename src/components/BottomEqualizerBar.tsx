@@ -137,7 +137,7 @@ export const BottomEqualizerBar: React.FC = () => {
       {/* Visualizer Status & Decibel Indicator */}
       <div className="flex items-center justify-between px-6 mb-1 text-[10px] font-mono tracking-widest text-zinc-400 uppercase select-none opacity-80">
         <span className="flex items-center gap-1.5">
-          <span className={`inline-block w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-white animate-pulse' : 'bg-zinc-600'}`} />
+          <span aria-hidden="true" className={`inline-block w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-white' : 'bg-zinc-600'}`} />
           {isPlaying ? 'FREQUENCY SPECTRUM // 64 BINS ACTIVE' : 'AUDIO EQUALIZER // STANDBY SPECTRUM'}
         </span>
         <span className="hidden sm:inline">

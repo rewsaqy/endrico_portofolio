@@ -87,7 +87,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           style={{ clipPath: 'polygon(0 0, 100% 0, 97% 100%, 3% 100%)' }}
         >
           <p className="font-mono text-xs leading-relaxed text-zinc-300">
-            3D Artist & Game Designer — fokus pada 3D modeling stylized & PSX, map dan level design atmosferik, serta core gameplay mechanics.
+            3D Artist &amp; Game Designer: fokus pada 3D modeling stylized &amp; PSX, map dan level design atmosferik, serta core gameplay mechanics.
           </p>
         </div>
 
@@ -118,6 +118,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         kanjiTop="夜行"
         kanjiBottom="探偵"
         caption="DETECTIVE // ANKO UGUISU // YOFUKASHI NO UTA"
+        priority
       />
     </div>
   );
