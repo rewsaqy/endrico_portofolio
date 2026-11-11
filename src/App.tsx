@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 import { HeaderNav, PageId } from './components/HeaderNav';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
@@ -46,12 +47,12 @@ const AppContent: React.FC = () => {
     setShowQuoteScreen(false);
   };
 
-  // Auto-proceed from quotes screen after 5 seconds to main home page
+  // Auto-proceed quickly from quotes cut-in (2.4s) to main home page
   useEffect(() => {
     if (!showQuoteScreen) return;
     const timer = setTimeout(() => {
       setShowQuoteScreen(false);
-    }, 5000);
+    }, 2400);
     return () => clearTimeout(timer);
   }, [showQuoteScreen]);
 
@@ -125,7 +126,7 @@ const AppContent: React.FC = () => {
         return;
       }
 
-      if (isTransitioning) return;
+      if (isTransitioning || isLoading || showQuoteScreen) return;
 
       if (e.key === 'Escape') {
         if (currentPage !== 'home') {
@@ -155,7 +156,7 @@ const AppContent: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentPage, isTransitioning, togglePlay]);
+  }, [currentPage, isTransitioning, isLoading, showQuoteScreen, togglePlay]);
 
   const toggleSound = () => {
     const next = !soundEnabled;
@@ -280,19 +281,29 @@ const AppContent: React.FC = () => {
       {/* MANGA CINEMATIC LOADING SCREEN / AUTOPLAY UNLOCK */}
       {isLoading && <MangaLoadingScreen onComplete={handleLoadingComplete} />}
 
-      {/* SHADCN HERO GEOMETRIC NOCTURNAL QUOTES POPUP */}
-      {showQuoteScreen && !isLoading && (
-        <div className="fixed inset-0 z-40 animate-fadeIn">
-          <HeroGeometric
-            badge="NOCTURNAL PHILOSOPHY // よふかしのうた"
-            title1="ENDRICO"
-            title2="3D ARTIST & GAME DESIGNER"
-            quote="Malam bukan tentang kegelapan, melainkan ruang bebas tanpa batas bagi mereka yang berani merancang dunia mereka sendiri."
-            author="ENDRICO ROVSANS KURNIA // rewsaqy"
-            onProceed={handleQuoteProceed}
-          />
-        </div>
-      )}
+      {/* SHADCN HERO GEOMETRIC NOCTURNAL QUOTES CUT-IN (HOME-ALIGNED) */}
+      <AnimatePresence>
+        {showQuoteScreen && !isLoading && (
+          <motion.div
+            key="nocturnal-quote-cutin"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } }}
+            transition={{ duration: 0.16 }}
+            className="fixed inset-0 z-40 overflow-y-auto overflow-x-hidden"
+          >
+            <HeroGeometric
+              badge="NOCTURNAL PHILOSOPHY // よふかしのうた"
+              title1="ENDRICO"
+              title2="3D ARTIST & GAME DESIGNER"
+              quote="Malam bukan tentang kegelapan, melainkan ruang bebas tanpa batas bagi mereka yang berani merancang dunia mereka sendiri."
+              author="ENDRICO ROVSANS KURNIA // rewsaqy"
+              autoProceedSeconds={2.4}
+              onProceed={handleQuoteProceed}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* MANGA SCREEN SLASH OVERLAY */}
       <PageTransitionOverlay isTransitioning={isTransitioning} />

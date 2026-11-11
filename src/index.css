@@ -205,3 +205,33 @@ body {
 .anko-manga-art {
   filter: grayscale(100%) contrast(140%) brightness(105%) drop-shadow(-8px -8px 0px #ffffff) drop-shadow(-20px -20px 0px #15151e) drop-shadow(-30px -30px 0px #000000);
 }
+
+@layer base {
+  a[href],
+  button:not(:disabled),
+  summary,
+  select:not(:disabled),
+  label[for],
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="switch"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow,
+  .animate-idleFloat,
+  .animate-fnafScanline,
+  .animate-fnafGlitch,
+  .animate-recBlink,
+  .animate-slideInLeft,
+  .animate-slideInRight {
+    animation: none !important;
+  }
+}

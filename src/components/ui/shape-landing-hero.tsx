@@ -1,90 +1,117 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Circle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-function ElegantShape({
+interface MangaStarOrbitProps {
+  className?: string;
+  size?: number;
+  delay?: number;
+  rotate?: number;
+  mouseOffset?: { x: number; y: number };
+  parallaxFactor?: number;
+  reducedMotion: boolean;
+}
+
+/**
+ * Twin wireframe 5-point manga star motif echoing the background behind Anko on Home.
+ */
+function MangaStarOrbit({
   className,
+  size = 440,
   delay = 0,
-  width = 400,
-  height = 100,
   rotate = 0,
-  y = 15,
-  gradient = "from-white/[0.08]",
-}: {
+  mouseOffset = { x: 0, y: 0 },
+  parallaxFactor = 14,
+  reducedMotion,
+}: MangaStarOrbitProps) {
+  return (
+    <motion.div
+      aria-hidden="true"
+      initial={
+        reducedMotion
+          ? { opacity: 0.28, scale: 1, rotate }
+          : { opacity: 0, scale: 0.86, rotate: rotate - 18 }
+      }
+      animate={{
+        opacity: 0.28,
+        scale: 1,
+        rotate,
+        x: reducedMotion ? 0 : mouseOffset.x * -parallaxFactor,
+        y: reducedMotion ? 0 : mouseOffset.y * -parallaxFactor,
+      }}
+      transition={{
+        duration: reducedMotion ? 0.01 : 0.55,
+        delay: reducedMotion ? 0 : delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      style={{ width: size, height: size }}
+      className={cn("absolute pointer-events-none select-none", className)}
+    >
+      <svg
+        viewBox="0 0 100 100"
+        className="w-full h-full stroke-white fill-none stroke-[1.7] animate-spin-slow"
+      >
+        <polygon points="50,2 62,38 98,38 69,60 80,96 50,74 20,96 31,60 2,38 38,38" />
+      </svg>
+      <svg
+        viewBox="0 0 100 100"
+        className="absolute inset-0 w-full h-full stroke-zinc-500 fill-none stroke-[1.2] transform rotate-45 scale-[0.84]"
+      >
+        <polygon points="50,2 62,38 98,38 69,60 80,96 50,74 20,96 31,60 2,38 38,38" />
+      </svg>
+    </motion.div>
+  );
+}
+
+interface MangaSlashRibbonProps {
   className?: string;
   delay?: number;
   width?: number;
   height?: number;
   rotate?: number;
-  y?: number;
-  gradient?: string;
-}) {
+  reducedMotion: boolean;
+}
+
+/**
+ * Monochrome diagonal manga ink action strip mirroring yofu-slash-bg and transition blades.
+ */
+function MangaSlashRibbon({
+  className,
+  delay = 0,
+  width = 560,
+  height = 72,
+  rotate = -14,
+  reducedMotion,
+}: MangaSlashRibbonProps) {
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        y: -150,
-        rotate: rotate - 15,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        rotate: rotate,
-      }}
+      aria-hidden="true"
+      initial={
+        reducedMotion
+          ? { opacity: 1, x: 0, rotate }
+          : { opacity: 0, x: -70, rotate }
+      }
+      animate={{ opacity: 1, x: 0, rotate }}
       transition={{
-        duration: 2.4,
-        delay,
-        ease: [0.23, 0.86, 0.39, 0.96],
-        opacity: { duration: 1.2 },
+        duration: reducedMotion ? 0.01 : 0.42,
+        delay: reducedMotion ? 0 : delay,
+        ease: [0.16, 1, 0.3, 1],
       }}
-      className={cn("absolute", className)}
+      style={{ width, height }}
+      className={cn(
+        "absolute pointer-events-none select-none -skew-x-12 border-y border-white/20 bg-white/[0.03]",
+        className,
+      )}
     >
-      <motion.div
-        animate={{
-          y: [0, y, 0],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-        style={{
-          width,
-          height,
-        }}
-        className="relative"
-      >
-        <div
-          className={cn(
-            "absolute inset-0 rounded-full",
-            "bg-gradient-to-r to-transparent",
-            gradient,
-            "backdrop-blur-[2px] border-2 border-white/[0.15]",
-            "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
-            "after:absolute after:inset-0 after:rounded-full",
-            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_70%)]",
-          )}
-        />
-      </motion.div>
+      <div className="absolute inset-x-0 top-1.5 h-[1px] bg-white/10" />
     </motion.div>
   );
 }
 
-function HeroGeometric({
-  badge = "Design Collective",
-  title1 = "Elevate Your Digital Vision",
-  title2 = "Crafting Exceptional Websites",
-  quote = "Night is when the real world begins. Walk through the shadows and make your art indelible.",
-  author = "Yofukashi No Uta // Nocturnal Archives",
-  rotate = 12,
-  width = 600,
-  height = 140,
-  y = 15,
-  onProceed,
-  autoProceedSeconds = 5,
-}: {
+export interface HeroGeometricProps {
   badge?: string;
   title1?: string;
   title2?: string;
@@ -96,162 +123,329 @@ function HeroGeometric({
   y?: number;
   onProceed?: () => void;
   autoProceedSeconds?: number;
-}) {
-  const fadeUpVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i: number) => ({
+}
+
+function HeroGeometric({
+  badge = "NOCTURNAL PHILOSOPHY // よふかしのうた",
+  title1 = "ENDRICO",
+  title2 = "3D ARTIST & GAME DESIGNER",
+  quote = "Malam bukan tentang kegelapan, melainkan ruang bebas tanpa batas bagi mereka yang berani merancang dunia mereka sendiri.",
+  author = "ENDRICO ROVSANS KURNIA // rewsaqy",
+  rotate = 12,
+  width = 560,
+  height = 76,
+  y = 10,
+  onProceed,
+  autoProceedSeconds = 2.4,
+}: HeroGeometricProps) {
+  const prefersReduced = useReducedMotion() ?? false;
+  const [mouseOffset, setMouseOffset] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+
+  // Subtle Home-style mouse parallax for twin stars
+  useEffect(() => {
+    if (prefersReduced) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      setMouseOffset({
+        x: (e.clientX / innerWidth - 0.5) * 2,
+        y: (e.clientY / innerHeight - 0.5) * 2,
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [prefersReduced]);
+
+  // Keyboard shortcut support (Enter / Space / Escape) in capture phase so background pages don't intercept
+  useEffect(() => {
+    if (!onProceed) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        onProceed();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown, { capture: true });
+    return () => window.removeEventListener("keydown", handleKeyDown, { capture: true });
+  }, [onProceed]);
+
+  const snapInVariants = {
+    hidden: prefersReduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
+    visible: (step: number) => ({
       opacity: 1,
       y: 0,
       transition: {
-        duration: 1,
-        delay: 0.5 + i * 0.2,
-        ease: [0.25, 0.4, 0.25, 1],
+        duration: prefersReduced ? 0.01 : 0.34,
+        delay: prefersReduced ? 0 : step * 0.06,
+        ease: [0.16, 1, 0.3, 1] as const,
       },
     }),
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303] select-none">
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl pointer-events-none" />
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="hero-quote-title"
+      initial={prefersReduced ? { opacity: 1 } : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={
+        prefersReduced
+          ? { opacity: 0 }
+          : { opacity: 0, scale: 1.02, transition: { duration: 0.2, ease: "easeIn" } }
+      }
+      transition={{ duration: prefersReduced ? 0.01 : 0.22 }}
+      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#040407] text-white select-none"
+    >
+      {/* LAYER 1: Home Manga Textures (Diagonal Slashes, Halftone Screentone, Speedlines) */}
+      <div aria-hidden="true" className="absolute inset-0 yofu-slash-bg pointer-events-none" />
+      <div aria-hidden="true" className="absolute inset-0 manga-screentone pointer-events-none" />
+      <div aria-hidden="true" className="absolute inset-0 manga-speedlines pointer-events-none" />
 
-      {/* Floating Animated Shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <ElegantShape
-          delay={0.3}
-          width={width}
-          height={height}
-          rotate={rotate}
-          y={y}
-          gradient="from-indigo-500/[0.15]"
-          className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
-        />
+      {/* LAYER 2: Home Stylized Dashed Manga Moon Ring */}
+      <motion.div
+        aria-hidden="true"
+        initial={
+          prefersReduced ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }
+        }
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: prefersReduced ? 0.01 : 0.45, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute -top-10 -right-12 md:top-8 md:right-16 w-56 h-56 sm:w-72 sm:h-72 md:w-88 md:h-88 rounded-full border-4 border-dashed border-white/20 pointer-events-none animate-spin-slow"
+      >
+        <div className="absolute top-6 left-8 w-10 h-10 rounded-full border border-white/30" />
+      </motion.div>
 
-        <ElegantShape
-          delay={0.5}
-          width={500}
-          height={120}
-          rotate={-15}
-          y={y}
-          gradient="from-rose-500/[0.15]"
-          className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
-        />
-
-        <ElegantShape
-          delay={0.4}
-          width={300}
-          height={80}
-          rotate={-8}
-          y={y}
-          gradient="from-violet-500/[0.15]"
-          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
-        />
-
-        <ElegantShape
-          delay={0.6}
-          width={200}
-          height={60}
-          rotate={20}
-          y={y}
-          gradient="from-amber-500/[0.15]"
-          className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
-        />
-
-        <ElegantShape
-          delay={0.7}
-          width={150}
-          height={40}
-          rotate={-25}
-          y={y}
-          gradient="from-cyan-500/[0.15]"
-          className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
-        />
+      {/* LAYER 3: Home Watermark Kanji */}
+      <div
+        aria-hidden="true"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none text-white/[0.04] font-black text-6xl sm:text-8xl md:text-9xl tracking-[0.35em] whitespace-nowrap"
+      >
+        よふかしのうた
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 md:px-6 py-8">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* LAYER 4: Animated Twin 5-Point Manga Stars + Sharp Monochrome Action Ribbons */}
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
+        <MangaStarOrbit
+          size={460}
+          rotate={rotate}
+          delay={0.04}
+          mouseOffset={mouseOffset}
+          parallaxFactor={16}
+          reducedMotion={prefersReduced}
+          className="left-[-140px] sm:left-[-80px] top-[12%]"
+        />
+
+        <MangaStarOrbit
+          size={360}
+          rotate={-rotate * 1.5}
+          delay={0.1}
+          mouseOffset={mouseOffset}
+          parallaxFactor={12}
+          reducedMotion={prefersReduced}
+          className="right-[-110px] sm:right-[-40px] bottom-[10%]"
+        />
+
+        <MangaSlashRibbon
+          width={width}
+          height={height}
+          rotate={-12}
+          delay={0.05}
+          reducedMotion={prefersReduced}
+          className="left-[-12%] top-[18%]"
+        />
+
+        <MangaSlashRibbon
+          width={Math.round(width * 0.78)}
+          height={Math.round(height * 0.72)}
+          rotate={-12}
+          delay={0.12}
+          reducedMotion={prefersReduced}
+          className="right-[-8%] bottom-[22%]"
+        />
+
+        {/* Crisp Manga Sparks matching MangaCharacter */}
+        <motion.span
+          initial={prefersReduced ? { opacity: 0.75, y: 0 } : { opacity: 0, y: -y }}
+          animate={{ opacity: 0.75, y: 0 }}
+          transition={{ duration: prefersReduced ? 0.01 : 0.35, delay: 0.14 }}
+          className="hidden sm:block absolute top-[18%] right-[14%] text-white text-3xl font-black"
+        >
+          ✦
+        </motion.span>
+        <motion.span
+          initial={prefersReduced ? { opacity: 0.45, y: 0 } : { opacity: 0, y: y }}
+          animate={{ opacity: 0.45, y: 0 }}
+          transition={{ duration: prefersReduced ? 0.01 : 0.35, delay: 0.18 }}
+          className="hidden sm:block absolute bottom-[24%] left-[12%] text-white text-2xl font-black"
+        >
+          ★
+        </motion.span>
+        <span className="hidden md:block absolute top-[28%] left-[8%] font-mono text-zinc-400 text-xs font-black tracking-widest opacity-60">
+          スッ...
+        </span>
+      </div>
+
+      {/* LAYER 5: Home City Skyline Silhouette */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 bg-repeat-x opacity-25 pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M0,20 L0,12 L5,12 L5,6 L12,6 L12,14 L18,14 L18,4 L24,4 L24,20 L30,20 L30,10 L38,10 L38,20 L45,20 L45,2 L52,2 L52,20 L60,20 L60,8 L68,8 L68,15 L75,15 L75,5 L82,5 L82,20 L90,20 L90,11 L96,11 L96,20 Z' fill='%23ffffff'/%3E%3C/svg%3E")`,
+          backgroundSize: "240px 100%",
+        }}
+      />
+
+      {/* FOREGROUND MANGA CHAPTER CUT-IN STAGE */}
+      <div className="relative z-10 w-full max-w-3xl mx-auto px-5 sm:px-8 py-6">
+        <div className="flex flex-col items-center text-center">
+          {/* Skewed Chapter Eyebrow Stamp matching HeaderNav */}
           <motion.div
             custom={0}
-            variants={fadeUpVariants}
+            variants={snapInVariants}
             initial="hidden"
             animate="visible"
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-6 md:mb-8"
+            className="mb-5 bg-black text-white px-4 py-1.5 border-2 border-white shadow-[3px_3px_0px_#ffffff] yofu-badge-skew inline-flex items-center"
           >
-            <Circle className="h-2 w-2 fill-rose-500/80 animate-pulse" />
-            <span className="text-xs sm:text-sm text-white/70 tracking-widest font-mono uppercase">
-              {badge}
-            </span>
-          </motion.div>
-
-          <motion.div
-            custom={1}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black mb-6 tracking-tight font-sans uppercase">
-              <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80 drop-shadow-[2px_2px_0px_#ffffff]">
-                {title1}
-              </span>
-              <br />
-              <span
-                className={cn(
-                  "bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white/90 to-rose-300",
-                )}
-              >
-                {title2}
-              </span>
-            </h1>
-          </motion.div>
-
-          {/* NOCTURNAL QUOTE SECTION */}
-          <motion.div
-            custom={2}
-            variants={fadeUpVariants}
-            initial="hidden"
-            animate="visible"
-            className="relative my-6 max-w-2xl mx-auto"
-          >
-            <div className="relative bg-black/70 border-2 border-white/20 p-5 sm:p-6 backdrop-blur-md shadow-[4px_4px_0px_rgba(255,255,255,0.15)] transform -rotate-1">
-              <span className="text-2xl text-white/30 font-serif absolute -top-3 left-4 select-none">
-                “
-              </span>
-              <p className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed font-sans italic">
-                {quote}
-              </p>
-              <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2 text-[10px] sm:text-xs font-mono text-zinc-400">
-                <span className="text-white font-bold">{author}</span>
-                <span className="text-zinc-500">[ 思想・名言 ]</span>
-              </div>
+            <div className="yofu-badge-unskew flex items-center gap-2 font-mono text-[10px] sm:text-xs font-bold tracking-widest uppercase">
+              <Moon size={13} className="fill-white text-white -rotate-12 shrink-0" aria-hidden="true" />
+              <span>{badge}</span>
             </div>
           </motion.div>
 
-          {/* PROCEED ACTION & AUTO-REDIRECT COUNTDOWN */}
+          {/* Hero Title Stack matching YofukashiTitle */}
+          <motion.div
+            custom={1}
+            variants={snapInVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col items-center"
+          >
+            <div className="relative inline-block">
+              <h1
+                id="hero-quote-title"
+                className="font-sans font-black text-5xl sm:text-7xl md:text-8xl tracking-tighter uppercase text-white leading-none drop-shadow-[4px_4px_0px_#000000] sm:drop-shadow-[6px_6px_0px_#000000]"
+                style={{
+                  WebkitTextStroke: "1.5px #ffffff",
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                {title1}
+              </h1>
+              <span
+                aria-hidden="true"
+                className="absolute -top-2.5 sm:-top-3 -right-2 sm:-right-4 bg-white text-black font-mono font-black text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5 tracking-widest uppercase rotate-2 shadow-[2px_2px_0px_#000000]"
+              >
+                夜更かし
+              </span>
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+              <span className="bg-white text-black font-mono text-xs sm:text-sm font-black px-3 py-1 border-2 border-black shadow-[3px_3px_0px_#ffffff] uppercase tracking-wider">
+                {title2}
+              </span>
+              <span className="bg-zinc-900 border border-zinc-600 text-zinc-200 font-mono text-[10px] sm:text-xs px-2.5 py-1 tracking-wider">
+                STAGE 00 // NOCTURNAL
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Nocturnal Quote Manga Panel matching HomePage Bio Box */}
+          <motion.div
+            custom={2}
+            variants={snapInVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative my-6 w-full max-w-2xl"
+          >
+            <div className="relative bg-black border-2 border-white p-5 sm:p-6 shadow-[5px_5px_0px_#ffffff] text-left">
+              {/* Manga Viewfinder Corner Brackets */}
+              <span aria-hidden="true" className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-white bg-black" />
+              <span aria-hidden="true" className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-white bg-black" />
+              <span aria-hidden="true" className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-white bg-black" />
+              <span aria-hidden="true" className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-white bg-black" />
+
+              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-300 border-b border-zinc-800 pb-2 mb-3">
+                <span className="bg-white text-black font-black px-1.5 py-0.5 tracking-widest">
+                  NOCTURNAL RECORD
+                </span>
+                <span aria-hidden="true" className="text-zinc-300 font-bold">
+                  [ 思想・名言 ]
+                </span>
+              </div>
+
+              <blockquote className="relative">
+                <span
+                  aria-hidden="true"
+                  className="text-3xl leading-none font-serif text-zinc-400 mr-1 select-none"
+                >
+                  “
+                </span>
+                <span className="text-sm sm:text-base md:text-lg text-white leading-relaxed font-sans font-bold">
+                  {quote}
+                </span>
+              </blockquote>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-zinc-800 pt-2.5 text-[11px] sm:text-xs font-mono">
+                <span className="text-white font-bold tracking-wide">{author}</span>
+                <span className="text-zinc-300">BGM ACTIVE // 堕天</span>
+              </div>
+
+              {/* Synced Auto-Proceed Progress Bar */}
+              {onProceed && (
+                <div
+                  aria-hidden="true"
+                  className="mt-3 h-1 w-full bg-zinc-900 overflow-hidden"
+                >
+                  <motion.div
+                    initial={{ scaleX: prefersReduced ? 1 : 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{
+                      duration: prefersReduced ? 0.01 : autoProceedSeconds,
+                      ease: "linear",
+                    }}
+                    className="h-full w-full bg-white origin-left"
+                  />
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Snappy Action CTA matching YofukashiButton */}
           {onProceed && (
             <motion.div
               custom={3}
-              variants={fadeUpVariants}
+              variants={snapInVariants}
               initial="hidden"
               animate="visible"
-              className="pt-2 flex flex-col items-center justify-center gap-2"
+              className="flex flex-col items-center gap-2.5"
             >
               <button
+                type="button"
                 onClick={onProceed}
-                className="group relative px-6 py-2.5 bg-white text-black font-black font-mono text-xs uppercase tracking-widest border-2 border-white shadow-[4px_4px_0px_#ffffff] hover:bg-black hover:text-white transition-all transform hover:scale-[1.02] active:scale-95 cursor-pointer -skew-x-6"
+                className="group min-h-[44px] px-7 py-2.5 bg-white text-black font-black font-mono text-xs sm:text-sm uppercase tracking-widest border-2 border-black shadow-[4px_4px_0px_#ffffff] hover:bg-zinc-200 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer -skew-x-6 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-4"
               >
                 <span className="skew-x-6 flex items-center gap-2">
-                  <span>ENTER PORTFOLIO NOW ➔</span>
+                  <span>MASUK KE HOME</span>
+                  <ArrowRight
+                    size={15}
+                    aria-hidden="true"
+                    className="transition-transform group-hover:translate-x-1"
+                  />
                 </span>
               </button>
-              <p className="text-[10px] font-mono text-zinc-500">
-                AUTO-REDIRECTING TO MAIN PAGE... (OR CLICK TO PROCEED)
+
+              <p className="text-[10px] sm:text-[11px] font-mono text-zinc-300 tracking-wider">
+                OTOMATIS MASUK DALAM {autoProceedSeconds}s // TEKAN ENTER ATAU ESC UNTUK LANGSUNG
               </p>
             </motion.div>
           )}
         </div>
       </div>
-
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none" />
-    </div>
+    </motion.div>
   );
 }
 
