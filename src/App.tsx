@@ -12,6 +12,7 @@ import { SkillsPage } from './pages/SkillsPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ContactPage } from './pages/ContactPage';
 import { MangaLoadingScreen } from './components/MangaLoadingScreen';
+import { HeroGeometric } from '@/components/ui/shape-landing-hero';
 import { sfx } from './utils/sfx';
 
 const AppContent: React.FC = () => {
@@ -28,6 +29,7 @@ const AppContent: React.FC = () => {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [timeString, setTimeString] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showQuoteScreen, setShowQuoteScreen] = useState<boolean>(false);
 
   const { togglePlay, nextTrack, prevTrack, play, selectTrack } = useMusicPlayer();
 
@@ -36,7 +38,22 @@ const AppContent: React.FC = () => {
     selectTrack(0);
     play();
     setIsLoading(false);
+    setShowQuoteScreen(true);
   };
+
+  const handleQuoteProceed = () => {
+    sfx.playSlash();
+    setShowQuoteScreen(false);
+  };
+
+  // Auto-proceed from quotes screen after 5 seconds to main home page
+  useEffect(() => {
+    if (!showQuoteScreen) return;
+    const timer = setTimeout(() => {
+      setShowQuoteScreen(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [showQuoteScreen]);
 
   // Browser Autoplay Unlock on earliest user touch/click/key
   useEffect(() => {
@@ -262,6 +279,20 @@ const AppContent: React.FC = () => {
 
       {/* MANGA CINEMATIC LOADING SCREEN / AUTOPLAY UNLOCK */}
       {isLoading && <MangaLoadingScreen onComplete={handleLoadingComplete} />}
+
+      {/* SHADCN HERO GEOMETRIC NOCTURNAL QUOTES POPUP */}
+      {showQuoteScreen && !isLoading && (
+        <div className="fixed inset-0 z-40 animate-fadeIn">
+          <HeroGeometric
+            badge="NOCTURNAL PHILOSOPHY // よふかしのうた"
+            title1="ENDRICO"
+            title2="3D ARTIST & GAME DESIGNER"
+            quote="Malam bukan tentang kegelapan, melainkan ruang bebas tanpa batas bagi mereka yang berani merancang dunia mereka sendiri."
+            author="ENDRICO ROVSANS KURNIA // rewsaqy"
+            onProceed={handleQuoteProceed}
+          />
+        </div>
+      )}
 
       {/* MANGA SCREEN SLASH OVERLAY */}
       <PageTransitionOverlay isTransitioning={isTransitioning} />
