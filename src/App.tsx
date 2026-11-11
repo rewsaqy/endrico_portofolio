@@ -11,6 +11,7 @@ import { AboutPage } from './pages/AboutPage';
 import { SkillsPage } from './pages/SkillsPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ContactPage } from './pages/ContactPage';
+import { MangaLoadingScreen } from './components/MangaLoadingScreen';
 import { sfx } from './utils/sfx';
 
 const AppContent: React.FC = () => {
@@ -26,8 +27,14 @@ const AppContent: React.FC = () => {
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [timeString, setTimeString] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { togglePlay, nextTrack, prevTrack } = useMusicPlayer();
+  const { togglePlay, nextTrack, prevTrack, play } = useMusicPlayer();
+
+  const handleLoadingComplete = () => {
+    play();
+    setIsLoading(false);
+  };
 
   // Sync hash changes
   useEffect(() => {
@@ -236,6 +243,9 @@ const AppContent: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* MANGA CINEMATIC LOADING SCREEN / AUTOPLAY UNLOCK */}
+      {isLoading && <MangaLoadingScreen onComplete={handleLoadingComplete} />}
 
       {/* MANGA SCREEN SLASH OVERLAY */}
       <PageTransitionOverlay isTransitioning={isTransitioning} />
